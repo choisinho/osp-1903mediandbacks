@@ -1,12 +1,11 @@
 package app.bqlab.mediandbacks;
 
+import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-
-import java.util.PropertyResourceBundle;
+import android.support.v7.app.AppCompatActivity;
 
 public class IntroActivity extends AppCompatActivity {
 
@@ -19,7 +18,11 @@ public class IntroActivity extends AppCompatActivity {
 
     private void checkUserService() {
         if (ServiceChecker.isRunning(this, UserService.class.getName())) {
-
+            startService(new Intent(this, MainActivity.class));
+            finish();
+        } else {
+            startService(new Intent(this, StartActivity.class));
+            finish();
         }
     }
 }

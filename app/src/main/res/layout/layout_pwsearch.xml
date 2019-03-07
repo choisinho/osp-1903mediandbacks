@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlackTransparent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="340dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/app_button_white"
+        tools:context=".PwsearchLayout">
+
+        <Button
+            android:id="@+id/pwsearch_close"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="15dp"
+            android:background="@drawable/pwsearch_x_icon" />
+
+        <TextView
+            android:id="@+id/pwsearch_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:text="@string/pwsearch_title"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlueDark"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/pwsearch_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pwsearch_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:text="@string/pwsearch_text"
+            android:textAlignment="center"
+            android:textColor="@color/colorGrayDark"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:id="@+id/pwsearch_input"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/pwsearch_text"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/app_button_white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/login_id_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="30dp"
+                android:text="@string/pwsearch_email"
+                android:textColor="@color/colorGrayDark"
+                android:textSize="18sp"
+                tools:ignore="RtlHardcoded" />
+
+            <EditText
+                android:id="@+id/pwsearch_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/pwsearch_email_hint"
+                android:inputType="textEmailAddress"
+                android:textColorHint="@color/colorWhiteDarkest" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/pwsearch_send"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/pwsearch_input"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/app_button_red"
+            android:focusable="true"
+            android:text="@string/pwsearch_send"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+</FrameLayout>

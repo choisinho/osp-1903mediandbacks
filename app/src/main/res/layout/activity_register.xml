@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="170dp"
+            android:layout_height="36dp"
+            android:layout_margin="80dp"
+            android:background="@drawable/app_wordmark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/app_button_white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/login_id_icon" />
+
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="@string/register_id"
+                android:textColor="@color/colorGrayDark"
+                android:textSize="18sp"
+                tools:ignore="RtlHardcoded" />
+
+            <EditText
+                android:id="@+id/register_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/register_id_hint"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                android:textColorHint="@color/colorWhiteDark"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/app_button_white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="23dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/person_icon" />
+
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="@string/register_name"
+                android:textColor="@color/colorGrayDark"
+                android:textSize="18sp"
+                tools:ignore="RtlHardcoded" />
+
+            <EditText
+                android:id="@+id/register_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/register_name_hint"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                android:textColorHint="@color/colorWhiteDark"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/app_button_white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/login_pw_icon" />
+
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="@string/register_pw"
+                android:textColor="@color/colorGrayDark"
+                android:textSize="18sp"
+                tools:ignore="RtlHardcoded" />
+
+            <EditText
+                android:id="@+id/register_pw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/register_pw_hint"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:textColorHint="@color/colorWhiteDark"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/app_button_white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/login_pw_icon" />
+
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="@string/register_pw"
+                android:textColor="@color/colorGrayDark"
+                android:textSize="18sp"
+                tools:ignore="RtlHardcoded" />
+
+            <EditText
+                android:id="@+id/register_pw2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/register_pw2_hint"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:textColorHint="@color/colorWhiteDark"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/register_sex"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/register_sex_male"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/app_button_red"
+                android:text="@string/register_sex_male"
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/register_sex_female"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/app_button_white"
+                android:text="@string/register_sex_female"
+                android:textColor="@color/colorGrayDark"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/app_button_white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/calendar_icon" />
+
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="@string/register_birth"
+                android:textColor="@color/colorGrayDark"
+                android:textSize="18sp"
+                tools:ignore="RtlHardcoded" />
+
+            <RelativeLayout
+                android:id="@+id/register_birth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/register_birth_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:hint="@string/register_birth_hint"
+                    android:textColorHint="@color/colorWhiteDark"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/under_arrow"
+                    tools:ignore="RtlHardcoded" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/register_agree"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:buttonTint="@color/colorBlack"
+            android:text="@string/register_agree"
+            android:textColor="@color/colorGrayDark"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/register_done"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/app_button_white_img"
+            android:text="@string/login_login_done"
+            android:textColor="@color/colorBlack"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="170dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="140dp"
+            android:layout_marginBottom="100dp"
+            android:background="@drawable/app_wordmark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/app_button_white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/login_id_icon" />
+
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:text="@string/login_login_id"
+                android:textColor="@color/colorGrayDark"
+                android:textSize="18sp"
+                tools:ignore="RtlHardcoded" />
+
+            <EditText
+                android:id="@+id/login_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/login_login_id_hint"
+                android:imeOptions="actionDone"
+                android:inputType="textEmailAddress"
+                android:textColorHint="@color/colorWhiteDark"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/app_button_white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/login_pw_icon" />
+
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:text="@string/login_login_pw"
+                android:textColor="@color/colorGrayDark"
+                android:textSize="18sp"
+                tools:ignore="RtlHardcoded" />
+
+            <EditText
+                android:id="@+id/login_pw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/login_login_pw_hint"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:textColorHint="@color/colorWhiteDark"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/login_find"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@null"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="@string/login_login_find"
+            android:textColor="@color/colorGrayDark"
+            android:textSize="16sp" />
+
+
+        <Button
+            android:id="@+id/login_done"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/app_button_white_img"
+            android:text="@string/login_login_done"
+            android:textColor="@color/colorBlack"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</FrameLayout>
