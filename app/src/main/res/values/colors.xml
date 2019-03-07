@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorNavy">#132735</color>
+    <color name="colorBlue">#007aff</color>
+    <color name="colorBlueDark">#033898</color>
+    <color name="colorBlueForChart">#3d85c6</color>
+    <color name="colorRedPrimary">#c5241c</color>
+    <color name="colorRed">#ff0000</color>
+    <color name="colorRedForChart">#ff4646</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorWhiteDark">#d9d9d9</color>
+    <color name="colorWhiteDarker">#c8c8c8</color>
+    <color name="colorWhiteDarkest">#a6a6a6</color>
+    <color name="colorWhiteDarkReddish">#aaaaaa</color>
+    <color name="colorWhiteNavy">#3b85c6</color>
+    <color name="colorGray">#595959</color>
+    <color name="colorGrayDark">#333333</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorBlackTransparent">#cc000000</color>
+</resources>
