@@ -1,6 +1,6 @@
 package app.bqlab.mediandbacks;
 
-class EmailChecker {
+class EmailCheck {
     static boolean isCorrect(String email) {
         String validCharacters = "abcdefghijklmnopqrstuvwxyz0123456789@.";
         for (int i = 0; i < email.length(); i++) {

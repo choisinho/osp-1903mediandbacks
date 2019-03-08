@@ -35,7 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
     String userPwConfirm;
     String userName;
     String userSex;
-    String userBirthDay;
+    String userBirthday;
     String userRegisterDay;
     String userIdKey;
     //objects
@@ -89,8 +89,8 @@ public class RegisterActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 Calendar calendar = Calendar.getInstance();
                                 calendar.set(picker.getYear(), picker.getMonth(), picker.getDayOfMonth());
-                                userBirthDay = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA).format(calendar.getTime());
-                                ((TextView)findViewById(R.id.register_birthday_day)).setText(userBirthDay);
+                                userBirthday = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA).format(calendar.getTime());
+                                ((TextView)findViewById(R.id.register_birthday_day)).setText(userBirthday);
                             }
                         })
                         .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -117,7 +117,7 @@ public class RegisterActivity extends AppCompatActivity {
                     mDatabase.child(userIdKey).child("info").child("pw").setValue(userPw);
                     mDatabase.child(userIdKey).child("info").child("name").setValue(userName);
                     mDatabase.child(userIdKey).child("info").child("sex").setValue(userSex);
-                    mDatabase.child(userIdKey).child("info").child("birthday").setValue(userBirthDay);
+                    mDatabase.child(userIdKey).child("info").child("birthday").setValue(userBirthday);
                     mDatabase.child(userIdKey).child("info").child("registerday").setValue(userRegisterDay);
                     //data
                     mDatabase.child(userIdKey).child("data").child(UserService.today).child("bad").setValue(0);
@@ -141,7 +141,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean isFormCorrect() {
-        if (!EmailChecker.isCorrect(userId)) {
+        if (!EmailCheck.isCorrect(userId)) {
             Toast.makeText(RegisterActivity.this, "이메일을 다시 확인해주세요.", Toast.LENGTH_LONG).show();
             return false;
         } else if (userPw.length() < 8) {
@@ -153,7 +153,7 @@ public class RegisterActivity extends AppCompatActivity {
         } else if (!((CheckBox) findViewById(R.id.register_agree)).isChecked()) {
             Toast.makeText(RegisterActivity.this, "회원 약관을 동의해야 합니다.", Toast.LENGTH_LONG).show();
             return false;
-        } else if (userId.isEmpty() || userName.isEmpty() || userPw.isEmpty() || userPwConfirm.isEmpty() || userSex.isEmpty() || userBirthDay.isEmpty()) {
+        } else if (userId.isEmpty() || userName.isEmpty() || userPw.isEmpty() || userPwConfirm.isEmpty() || userSex.isEmpty() || userBirthday.isEmpty()) {
             Toast.makeText(RegisterActivity.this, "빈칸이 있는지 다시 확인해주세요.", Toast.LENGTH_LONG).show();
             return false;
         } else {

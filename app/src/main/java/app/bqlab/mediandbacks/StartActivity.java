@@ -20,7 +20,7 @@ public class StartActivity extends AppCompatActivity {
         PermissionCheck.checkLocationPermission(this);
         InternetCheck.showDialogAfterCheck(this);
         //initialize
-        UserService.today = DateManage.getToday();
+        UserService.today = Today.getString();
         //setup
         findViewById(R.id.start_register).setOnClickListener(new View.OnClickListener() {
             @Override
