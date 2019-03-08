@@ -95,18 +95,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean isCorrectIdpw(String id, String pw) {
-        DataSnapshot loginInfo = null;
+        DataSnapshot userInfo = null;
         for (DataSnapshot info : infoList) {
             String currentId = String.valueOf(info.child("id").getValue());
             if (id.equals(currentId)) {
-                loginInfo = info;
+                userInfo = info;
                 break;
             }
         }
-        if (loginInfo == null)
+        if (userInfo == null)
             return false;
         else
-            return String.valueOf(loginInfo.child("pw").getValue()).equals(pw);
+            return String.valueOf(userInfo.child("pw").getValue()).equals(pw);
     }
 
     private void setupDatabase() {
