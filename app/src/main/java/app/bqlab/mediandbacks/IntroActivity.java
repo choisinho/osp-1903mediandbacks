@@ -18,10 +18,10 @@ public class IntroActivity extends AppCompatActivity {
 
     private void checkUserService() {
         if (ServiceChecker.isRunning(this, UserService.class.getName())) {
-            startService(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, MainActivity.class));
             finish();
         } else {
-            startService(new Intent(this, StartActivity.class));
+            startActivity(new Intent(this, StartActivity.class));
             finish();
         }
     }

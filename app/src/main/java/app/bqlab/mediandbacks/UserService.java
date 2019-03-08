@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.Toast;
 
-public class UserService extends Service {
+class UserService extends Service {
+
+    static String today;
 
     @Override
     public IBinder onBind(Intent intent) {
