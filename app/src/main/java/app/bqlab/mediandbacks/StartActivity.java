@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 public class StartActivity extends AppCompatActivity {
@@ -19,7 +18,7 @@ public class StartActivity extends AppCompatActivity {
     private void init() {
         //check
         PermissionCheck.checkLocationPermission(this);
-        InternetChecker.showDialogAfterCheck(this);
+        InternetCheck.showDialogAfterCheck(this);
         //initialize
         UserService.today = DateManage.getToday();
         //setup

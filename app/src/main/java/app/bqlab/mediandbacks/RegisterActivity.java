@@ -1,6 +1,5 @@
 package app.bqlab.mediandbacks;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,8 +20,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void init() {
         //check
-        InternetChecker.showDialogAfterCheck(this);
+        InternetCheck.showDialogAfterCheck(this);
         //initialize
         userSex = "남자";
         registeredIds = new ArrayList<>();
