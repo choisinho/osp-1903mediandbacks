@@ -23,7 +23,7 @@
     <string name="register_sex_male">남자</string>
     <string name="register_sex_female">여자</string>
     <string name="register_birth">생년월일</string>
-    <string name="register_birth_hint">생년월일 선택하기</string>
+    <string name="register_birthday_hint">생년월일 선택하기</string>
     <string name="register_agree">메디앤백스 회원 약관과 개인정보 제공에 대해 동의합니다.</string>
     <string name="register_done">회원가입</string>
 

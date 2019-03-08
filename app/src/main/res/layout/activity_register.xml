@@ -162,7 +162,7 @@
                 tools:ignore="RtlHardcoded" />
 
             <EditText
-                android:id="@+id/register_pw2"
+                android:id="@+id/register_pwConfirm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -234,18 +234,18 @@
                 tools:ignore="RtlHardcoded" />
 
             <RelativeLayout
-                android:id="@+id/register_birth"
+                android:id="@+id/register_birthday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/register_birth_day"
+                    android:id="@+id/register_birthday_day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:background="@null"
-                    android:hint="@string/register_birth_hint"
+                    android:hint="@string/register_birthday_hint"
                     android:textColorHint="@color/colorWhiteDark"
                     android:textSize="18sp" />
 

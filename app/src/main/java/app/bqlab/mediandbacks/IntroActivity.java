@@ -1,11 +1,10 @@
 package app.bqlab.mediandbacks;
 
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 
 public class IntroActivity extends AppCompatActivity {
 
@@ -17,7 +16,7 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     private void checkUserService() {
-        if (ServiceChecker.isRunning(this, UserService.class.getName())) {
+        if (ServiceCheck.isRunning(this, UserService.class.getName())) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
         } else {

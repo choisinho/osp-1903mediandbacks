@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.Toast;
 
-class UserService extends Service {
+public class UserService extends Service {
 
+    //variables
     static String today;
+    static String userId;
+    static boolean buzzable;
 
     @Override
     public IBinder onBind(Intent intent) {
