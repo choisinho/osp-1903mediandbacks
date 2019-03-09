@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -38,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     String userSex;
     String userBirthday;
     String userRegisterDay;
-    String userIdKey;
+    String userKey;
     //objects
     ArrayList<String> registeredIds;
     DatabaseReference mDatabase;
@@ -91,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Calendar calendar = Calendar.getInstance();
                                 calendar.set(picker.getYear(), picker.getMonth(), picker.getDayOfMonth());
                                 userBirthday = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA).format(calendar.getTime());
-                                ((TextView)findViewById(R.id.register_birthday_day)).setText(userBirthday);
+                                ((TextView) findViewById(R.id.register_birthday_day)).setText(userBirthday);
                             }
                         })
                         .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -111,26 +110,27 @@ public class RegisterActivity extends AppCompatActivity {
                 userPw = ((EditText) findViewById(R.id.register_pw)).getText().toString();
                 userPwConfirm = ((EditText) findViewById(R.id.register_pwConfirm)).getText().toString();
                 userRegisterDay = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA).format(new Date());
-                userIdKey = String.valueOf(userId.hashCode());
+                userKey = String.valueOf(userId.hashCode());
                 if (isFormCorrect()) {
                     //info
-                    mDatabase.child(userIdKey).child("info").child("id").setValue(userId);
-                    mDatabase.child(userIdKey).child("info").child("pw").setValue(userPw);
-                    mDatabase.child(userIdKey).child("info").child("name").setValue(userName);
-                    mDatabase.child(userIdKey).child("info").child("sex").setValue(userSex);
-                    mDatabase.child(userIdKey).child("info").child("birthday").setValue(userBirthday);
-                    mDatabase.child(userIdKey).child("info").child("registerday").setValue(userRegisterDay);
+                    mDatabase.child(userKey).child("info").child("id").setValue(userId);
+                    mDatabase.child(userKey).child("info").child("pw").setValue(userPw);
+                    mDatabase.child(userKey).child("info").child("name").setValue(userName);
+                    mDatabase.child(userKey).child("info").child("sex").setValue(userSex);
+                    mDatabase.child(userKey).child("info").child("birthday").setValue(userBirthday);
+                    mDatabase.child(userKey).child("info").child("register_day").setValue(userRegisterDay);
                     //data
-                    mDatabase.child(userIdKey).child("data").child(UserService.today).child("bad").setValue(0);
-                    mDatabase.child(userIdKey).child("data").child(UserService.today).child("good").setValue(0);
-                    mDatabase.child(userIdKey).child("data").child(UserService.today).child("total").setValue(0);
-                    mDatabase.child(userIdKey).child("data").child(UserService.today).child("vibrate").setValue(0);
+                    mDatabase.child(userKey).child("data").child("realtime").setValue(0);
+                    mDatabase.child(userKey).child("data").child(UserService.today).child("bad").setValue(0);
+                    mDatabase.child(userKey).child("data").child(UserService.today).child("good").setValue(0);
+                    mDatabase.child(userKey).child("data").child(UserService.today).child("total").setValue(0);
+                    mDatabase.child(userKey).child("data").child(UserService.today).child("vibrate").setValue(0);
                     //setting
-                   mDatabase.child(userIdKey).child("setting").child("good_pose").setValue(0);
-                   mDatabase.child(userIdKey).child("setting").child("bad_pose").setValue(0);
-                   mDatabase.child(userIdKey).child("setting").child("notify_delay").setValue(0);
-                   mDatabase.child(userIdKey).child("setting").child("week_time").setValue("");
-                   //finish
+                    mDatabase.child(userKey).child("setting").child("good_pose").setValue(0);
+                    mDatabase.child(userKey).child("setting").child("bad_pose").setValue(0);
+                    mDatabase.child(userKey).child("setting").child("notify_delay").setValue(0);
+                    mDatabase.child(userKey).child("setting").child("week_time").setValue("");
+                    //finish
                     Toast.makeText(RegisterActivity.this, "회원 가입이 완료되었습니다.", Toast.LENGTH_LONG).show();
                     Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
                     i.putExtra("id", userId);

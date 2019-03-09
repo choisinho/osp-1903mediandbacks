@@ -28,23 +28,25 @@ public class UserService extends Service implements Runnable {
     //variables
     static int data;
     static int dataTotal;
+    static int dataVibrate;
     static int dataBad;
     static int dataGood;
-    static int userBad;
-    static int userGood;
+    static int badPose;
+    static int goodPose;
     static int notifyDelay;
     static String weekTime;
     static String userId;
+    static String userKey;
     static String userName;
     static String userSex;
     static String userBirthday;
-    static String userRegisterDay;
+    static String userRegisterDate;
     static String today;
     static boolean buzzable;
     static boolean threading;
-    static boolean connected;
+    static boolean deviceConnected;
     //objects
-    static DatabaseReference mDatabase;
+    static DatabaseReference database;
     public static NotificationManager notificationManager;
     public static NotificationChannel notificationChannel;
 
@@ -55,8 +57,8 @@ public class UserService extends Service implements Runnable {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        setupNotificaition(intent);
         setupDatabase();
+        setupNotificaition(intent);
         return START_NOT_STICKY;
     }
 
@@ -72,6 +74,72 @@ public class UserService extends Service implements Runnable {
             }
         }
         stopSelf();
+    }
+
+    public void loadData(DataSnapshot dataSnapshot) {
+        //data
+        dataGood = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("good").getValue())).intValue();
+        dataBad = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("bad").getValue())).intValue();
+        dataTotal = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("total").getValue())).intValue();
+        dataVibrate = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("vibrate").getValue())).intValue();
+        //info
+        userKey = String.valueOf(userId.hashCode());
+        userName = Objects.requireNonNull(dataSnapshot.child("info").child("name").getValue()).toString();
+        userSex = Objects.requireNonNull(dataSnapshot.child("info").child("sex").getValue()).toString();
+        userBirthday = Objects.requireNonNull(dataSnapshot.child("info").child("birthday").getValue()).toString();
+        userRegisterDate = Objects.requireNonNull(dataSnapshot.child("info").child("register_date").getValue()).toString();
+        //setting
+        notifyDelay = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("notify_delay").getValue())).intValue();
+        weekTime = Objects.requireNonNull(dataSnapshot.child("setting").child("week_time").getValue()).toString();
+        goodPose = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("good_pose").getValue())).intValue();
+        badPose = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("bad_pose").getValue())).intValue();
+    }
+
+    public void processData(int data) {
+        if (dataTotal != 0) {
+            database.child("data").child(today).child("total").setValue(dataTotal + 1);
+            if (data > goodPose - 10 && data < goodPose + 10)
+                database.child("data").child(today).child("good").setValue(dataGood + 1);
+            if (data > badPose - 10 && data < badPose + 10) {
+                database.child("data").child(today).child("badtime").setValue(dataBad + 1);
+                database.child("data").child(today).child("vibrate").setValue(dataBad);
+                makeNotification();
+            }
+        }
+    }
+
+    public boolean checkToday(Iterable<DataSnapshot> daySnapshots) {
+        String today = Today.getString();
+        List<String> days = new ArrayList<>();
+        for (DataSnapshot snapshot : daySnapshots) {
+            days.add(Objects.requireNonNull(snapshot.getKey()));
+        }
+        if (!days.contains(today)) {
+            database.child("data").child(today).child("vibrate").setValue(0);
+            database.child("data").child(today).child("total").setValue(0);
+            database.child("data").child(today).child("good").setValue(0);
+            database.child("data").child(today).child("bad").setValue(0);
+            UserService.today = today;
+            return false;
+        }
+        return true;
+    }
+
+    private void setupDatabase() {
+        database = FirebaseDatabase.getInstance().getReference().child(String.valueOf(userId.hashCode()));
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                checkToday(dataSnapshot.child("data").getChildren());
+                loadData(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(UserService.this, "연결 상태가 원활하지 않습니다. ", Toast.LENGTH_LONG).show();
+                stopSelf();
+            }
+        });
     }
 
     private void setupNotificaition(Intent intent) {
@@ -94,68 +162,6 @@ public class UserService extends Service implements Runnable {
                 .setContentIntent(p)
                 .build();
         startForeground(1, notification);
-    }
-
-    private void setupDatabase() {
-        mDatabase = FirebaseDatabase.getInstance().getReference().child(String.valueOf(userId.hashCode()));
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                checkToday(dataSnapshot.child("data").getChildren());
-                loadData(dataSnapshot);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(UserService.this, "연결 상태가 원활하지 않습니다. ", Toast.LENGTH_LONG).show();
-                stopSelf();
-            }
-        });
-    }
-
-    public boolean checkToday(Iterable<DataSnapshot> daySnapshots) {
-        String today = Today.getString();
-        List<String> days = new ArrayList<>();
-        for (DataSnapshot snapshot : daySnapshots) {
-            days.add(Objects.requireNonNull(snapshot.getKey()));
-        }
-        if (!days.contains(today)) {
-            mDatabase.child("data").child(today).child("vibrate").setValue(0);
-            mDatabase.child("data").child(today).child("total").setValue(0);
-            mDatabase.child("data").child(today).child("good").setValue(0);
-            mDatabase.child("data").child(today).child("bad").setValue(0);
-            UserService.today = today;
-            return false;
-        }
-        return true;
-    }
-
-    public void loadData(DataSnapshot dataSnapshot) {
-        userName = Objects.requireNonNull(dataSnapshot.child("info").child("name").getValue()).toString();
-        userSex = Objects.requireNonNull(dataSnapshot.child("info").child("sex").getValue()).toString();
-        userBirthday = Objects.requireNonNull(dataSnapshot.child("info").child("birth").getValue()).toString();
-        userRegisterDay = Objects.requireNonNull(dataSnapshot.child("info").child("register").getValue()).toString();
-        data = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child("realtime").getValue())).intValue();
-        dataTotal = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("total").getValue())).intValue();
-        dataGood = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("good").getValue())).intValue();
-        dataBad = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("bad").getValue())).intValue();
-        notifyDelay = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("notify_delay").getValue())).intValue();
-        weekTime = Objects.requireNonNull(dataSnapshot.child("setting").child("week_time").getValue()).toString();
-        userGood = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("good").getValue())).intValue();
-        userBad = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("bad").getValue())).intValue();
-    }
-
-    public void processData(int data) {
-        if (dataTotal != 0) {
-            mDatabase.child("data").child(today).child("total").setValue(dataTotal + 1);
-            if (data > userGood - 10 && data < userGood + 10)
-                mDatabase.child("data").child(today).child("good").setValue(dataGood + 1);
-            if (data > userBad - 10 && data < userBad + 10) {
-                mDatabase.child("data").child(today).child("badtime").setValue(dataBad + 1);
-                mDatabase.child("data").child(today).child("vibrate").setValue(dataBad);
-                makeNotification();
-            }
-        }
     }
 
     public void makeNotification() {

@@ -9,17 +9,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.widget.Button;
+import android.util.Log;
 import android.widget.Toast;
-
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.Set;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 
-public class Bluetooth {
+class BluetoothSetting {
     //constants
     static final int REQUEST_ENABLE_BLUETOOTH = 1000;
     static final int REQUEST_DISCOVERABLE = 1001;
@@ -31,7 +29,7 @@ public class Bluetooth {
     private BluetoothDevice mBTDevice;
     private Set<BluetoothDevice> pairedDevices;
 
-    Bluetooth(Activity activity, Context context) {
+    BluetoothSetting(Activity activity, Context context) {
         mContext = context;
         mActivity = activity;
         mBluetooth = new BluetoothSPP(context);
@@ -39,8 +37,9 @@ public class Bluetooth {
         pairedDevices = mBTAdapter.getBondedDevices();
     }
 
-    void setup() {
+    void checkup() {
         if (!mBluetooth.isBluetoothAvailable()) {
+            Log.d("BluetoothSetting", "Checking up");
             new AlertDialog.Builder(mContext)
                     .setCancelable(false)
                     .setMessage("지원하지 않는 기기입니다.")
@@ -52,16 +51,25 @@ public class Bluetooth {
                     }).show();
         } else if (!mBluetooth.isBluetoothEnabled()) {
             mActivity.startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), REQUEST_ENABLE_BLUETOOTH);
-        } else if (!mBluetooth.isServiceAvailable()) {
+        } else
+            setup();
+    }
+
+    void setup() {
+        Log.d("BluetoothSetting", "Setting up");
+        if (!mBluetooth.isServiceAvailable()) {
             mBluetooth.setupService();
             mBluetooth.startService(BluetoothState.DEVICE_OTHER);
             setup();
-        }
+        } else
+            autoConnect();
     }
 
-    private void autoConnect(String name) {
-        if (isPaired(name)) {
+    void autoConnect() {
+        if (!isPaired()) {
+            Log.d("BluetoothSetting", "Not paired device");
             if (mBTAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+                Log.d("BluetoothSetting", "Request SCAN_MODE permission");
                 mActivity.startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE), REQUEST_DISCOVERABLE);
             } else {
                 if (mBTAdapter.isDiscovering())
@@ -73,11 +81,11 @@ public class Bluetooth {
                 mBTAdapter.startDiscovery();
             }
         } else {
-            mBluetooth.connect(mBTDevice.getAddress());
+            mBluetooth.connect(getPairedDevice().getAddress());
         }
     }
 
-    public boolean isPaired(String name) {
+    boolean isPaired() {
         for (BluetoothDevice device : pairedDevices) {
             if (device.getName().equals("mediandbacks")) {
                 return true;
@@ -86,7 +94,11 @@ public class Bluetooth {
         return false;
     }
 
-    public BluetoothDevice getPairedDevice(String name) {
+    BluetoothSPP getSetting() {
+        return mBluetooth;
+    }
+
+    BluetoothDevice getPairedDevice() {
         for (BluetoothDevice device : pairedDevices) {
             if (device.getName().equals("mediandbacks")) {
                 return device;
@@ -106,15 +118,17 @@ public class Bluetooth {
                     mBTAdapter.cancelDiscovery();
                     mBluetooth.connect(device.getAddress());
                     mActivity.unregisterReceiver(broadcastReceiver);
+                    Log.d("BluetoothSetting", "Found the device");
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                Log.d("BluetoothSetting", "Cannot found the device");
                 new AlertDialog.Builder(context)
                         .setCancelable(false)
                         .setMessage("장치를 찾을 수 없습니다.")
                         .setPositiveButton("재시도", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                setup();
+                                checkup();
                             }
                         })
                         .setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -122,7 +136,6 @@ public class Bluetooth {
                             public void onClick(DialogInterface dialog, int which) {
                                 Toast.makeText(mContext, "준비가 끝나면 다시 시도하세요.", Toast.LENGTH_LONG).show();
                                 mActivity.unregisterReceiver(broadcastReceiver);
-                                setup();
                             }
                         }).show();
             }

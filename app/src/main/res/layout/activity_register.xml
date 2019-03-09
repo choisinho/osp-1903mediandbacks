@@ -228,7 +228,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:text="@string/register_birth"
+                android:text="@string/register_birthday"
                 android:textColor="@color/colorGrayDark"
                 android:textSize="18sp"
                 tools:ignore="RtlHardcoded" />

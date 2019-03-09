@@ -1588,14 +1588,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="5dp"
                                 android:layout_marginTop="15dp"
-                                android:text="@string/main_setting_profile_birth"
+                                android:text="@string/main_setting_profile_birthday"
                                 android:textAllCaps="false"
                                 android:textColor="@color/colorBlack"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/main_setting_profile_birth"
+                                android:id="@+id/main_setting_profile_birthday"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
@@ -1628,14 +1628,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="5dp"
                                 android:layout_marginTop="15dp"
-                                android:text="@string/main_setting_profile_register"
+                                android:text="@string/main_setting_profile_register_date"
                                 android:textAllCaps="false"
                                 android:textColor="@color/colorBlack"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/main_setting_profile_register"
+                                android:id="@+id/main_setting_profile_register_date"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
