@@ -5,8 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-class Today {
-    static String getString() {
+class TodayString {
+    static String get() {
         return new SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(Calendar.getInstance().getTime());
     }
 }

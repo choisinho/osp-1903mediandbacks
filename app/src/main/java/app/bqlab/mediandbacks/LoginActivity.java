@@ -79,10 +79,11 @@ public class LoginActivity extends AppCompatActivity {
                 stopService(new Intent(LoginActivity.this, UserService.class));
                 finishAffinity();
             } else {
-                if (getSharedPreferences("setting", MODE_PRIVATE).getBoolean("NEED_INITIAL_SETTING", true)) {
-                    startActivity(new Intent(this, InitialActivity.class));
-                    UserService.buzzable = false;
+                if (getSharedPreferences("setting", MODE_PRIVATE).getBoolean("FIRST_RUN", true)) {
                     UserService.userId = id;
+                    UserService.buzzable = false;
+                    UserService.userKey = String.valueOf(id.hashCode());
+                    startActivity(new Intent(this, InitialActivity.class));
                     finish();
                 } else {
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -134,6 +135,6 @@ public class LoginActivity extends AppCompatActivity {
     private void showPwsearchLayout() {
         FrameLayout login = findViewById(R.id.login);
         ChildrenEnable.set(false, login);
-        login.addView(new PwsearchLayout(LoginActivity.this));
+        login.addView(new PwsearchLayout(this));
     }
 }

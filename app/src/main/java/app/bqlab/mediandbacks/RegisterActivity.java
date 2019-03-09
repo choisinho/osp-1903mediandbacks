@@ -129,7 +129,7 @@ public class RegisterActivity extends AppCompatActivity {
                     mDatabase.child(userKey).child("setting").child("good_pose").setValue(0);
                     mDatabase.child(userKey).child("setting").child("bad_pose").setValue(0);
                     mDatabase.child(userKey).child("setting").child("notify_delay").setValue(0);
-                    mDatabase.child(userKey).child("setting").child("week_time").setValue("");
+                    mDatabase.child(userKey).child("setting").child("week_goal").setValue("");
                     //finish
                     Toast.makeText(RegisterActivity.this, "회원 가입이 완료되었습니다.", Toast.LENGTH_LONG).show();
                     Intent i = new Intent(RegisterActivity.this, LoginActivity.class);

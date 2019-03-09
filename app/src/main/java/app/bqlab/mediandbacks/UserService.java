@@ -34,7 +34,7 @@ public class UserService extends Service implements Runnable {
     static int badPose;
     static int goodPose;
     static int notifyDelay;
-    static String weekTime;
+    static String weekGoal;
     static String userId;
     static String userKey;
     static String userName;
@@ -83,14 +83,13 @@ public class UserService extends Service implements Runnable {
         dataTotal = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("total").getValue())).intValue();
         dataVibrate = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("vibrate").getValue())).intValue();
         //info
-        userKey = String.valueOf(userId.hashCode());
         userName = Objects.requireNonNull(dataSnapshot.child("info").child("name").getValue()).toString();
         userSex = Objects.requireNonNull(dataSnapshot.child("info").child("sex").getValue()).toString();
         userBirthday = Objects.requireNonNull(dataSnapshot.child("info").child("birthday").getValue()).toString();
         userRegisterDate = Objects.requireNonNull(dataSnapshot.child("info").child("register_date").getValue()).toString();
         //setting
         notifyDelay = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("notify_delay").getValue())).intValue();
-        weekTime = Objects.requireNonNull(dataSnapshot.child("setting").child("week_time").getValue()).toString();
+        weekGoal = Objects.requireNonNull(dataSnapshot.child("setting").child("week_time").getValue()).toString();
         goodPose = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("good_pose").getValue())).intValue();
         badPose = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("bad_pose").getValue())).intValue();
     }
@@ -109,7 +108,7 @@ public class UserService extends Service implements Runnable {
     }
 
     public boolean checkToday(Iterable<DataSnapshot> daySnapshots) {
-        String today = Today.getString();
+        String today = TodayString.get();
         List<String> days = new ArrayList<>();
         for (DataSnapshot snapshot : daySnapshots) {
             days.add(Objects.requireNonNull(snapshot.getKey()));

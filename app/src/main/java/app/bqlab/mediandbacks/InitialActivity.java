@@ -1,20 +1,23 @@
 package app.bqlab.mediandbacks;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.internal.StringResourceValueReader;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -49,7 +52,7 @@ public class InitialActivity extends AppCompatActivity {
         //initialize
         mBluetooth = new BluetoothSetting(this, this);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        //call
+        //call method
         showInitialFirst();
     }
 
@@ -129,15 +132,15 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_third).setVisibility(View.GONE);
         findViewById(R.id.initial_fourth).setVisibility(View.GONE);
         findViewById(R.id.initial_fifth).setVisibility(View.GONE);
-        Log.d("InitialActivity", UserService.userKey);
         ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_second_title));
+        //event
         mBluetooth.getSetting().setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             @Override
             public void onDataReceived(byte[] data, String message) {
                 UserService.deviceConnected = true;
                 UserService.data = Integer.valueOf(message) - 90;
                 mDatabase.child(UserService.userKey).child("data").child("realtime").setValue(UserService.data);
-                Log.d("InitialiActivity", "Realtime data -> "+ String.valueOf(UserService.data));
+                Log.d("InitialiActivity", "Realtime data: " + String.valueOf(UserService.data));
             }
         });
         mBluetooth.getSetting().setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
@@ -158,10 +161,139 @@ public class InitialActivity extends AppCompatActivity {
             @Override
             public void onDeviceConnectionFailed() {
                 Log.d("InitialActivity", "Failed to connect device");
-                Toast.makeText(InitialActivity.this, "장치와의 연결이 끊겼습니다.", Toast.LENGTH_LONG).show();
+                Toast.makeText(InitialActivity.this, "장치와 연결할 수 없습니다.", Toast.LENGTH_LONG).show();
             }
         });
+        findViewById(R.id.initial_second_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (UserService.deviceConnected) {
+                    showSetposeLayout();
+                }
+            }
+        });
+        //call method
         mBluetooth.checkup();
+    }
+
+    private void showInitialThird() {
+        //attribute
+        findViewById(R.id.initial_first).setVisibility(View.GONE);
+        findViewById(R.id.initial_second).setVisibility(View.GONE);
+        findViewById(R.id.initial_third).setVisibility(View.VISIBLE);
+        findViewById(R.id.initial_fourth).setVisibility(View.GONE);
+        findViewById(R.id.initial_fifth).setVisibility(View.GONE);
+        ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_third_title));
+        //event
+        findViewById(R.id.initial_third_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("InitialActivity", "Good pose set to " + String.valueOf(UserService.data));
+                mDatabase.child(UserService.userKey).child("setting").child("good_pose").setValue(UserService.data);
+                showInitialFourth();
+            }
+        });
+    }
+
+    private void showInitialFourth() {
+        //attribute
+        findViewById(R.id.initial_first).setVisibility(View.GONE);
+        findViewById(R.id.initial_second).setVisibility(View.GONE);
+        findViewById(R.id.initial_third).setVisibility(View.GONE);
+        findViewById(R.id.initial_fourth).setVisibility(View.VISIBLE);
+        findViewById(R.id.initial_fifth).setVisibility(View.GONE);
+        ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_fourth_title));
+        //event
+        findViewById(R.id.initial_fourth_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("InitialActivity", "Bad pose set to " + String.valueOf(UserService.data));
+                mDatabase.child(UserService.userKey).child("setting").child("bad_pose").setValue(UserService.data);
+                showInitialFifth();
+            }
+        });
+    }
+
+    private void showInitialFifth() {
+        //attribute
+        findViewById(R.id.initial_first).setVisibility(View.GONE);
+        findViewById(R.id.initial_second).setVisibility(View.GONE);
+        findViewById(R.id.initial_third).setVisibility(View.GONE);
+        findViewById(R.id.initial_fourth).setVisibility(View.GONE);
+        findViewById(R.id.initial_fifth).setVisibility(View.VISIBLE);
+        ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_fifth_title));
+        //event
+        final NumberPicker picker = findViewById(R.id.initial_fifth_picker);
+        final String[] delays = new String[]{"즉시", "5초 후", "10초 후"};
+        final String[] goals = new String[]{"1일 60분 주4회", "1일 30분 주4회", "1일 10분 주4회"};
+        picker.setMaxValue(2);
+        picker.setDisplayedValues(delays);
+        findViewById(R.id.initial_fifth_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                String s = "나쁜 자세가 감지되면 " + delays[picker.getValue()] + " 진동으로 알려줍니다.";
+                new AlertDialog.Builder(InitialActivity.this)
+                        .setTitle("이 시간으로 설정하시겠습니까?")
+                        .setMessage(s)
+                        .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //set notify delay
+                                int i = picker.getValue() * 5;
+                                Log.d("InitialActivity", "Notify delay set to " + String.valueOf(i));
+                                mDatabase.child(UserService.userKey).child("setting").child("notify_delay").setValue(i);
+                                //load week goal setting
+                                ((TextView) findViewById(R.id.initial_actionbar)).setText("주간목표 설정하기");
+                                picker.setDisplayedValues(goals);
+                                v.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        new AlertDialog.Builder(InitialActivity.this)
+                                                .setTitle("이 목표로 설정하시겠습니까?")
+                                                .setMessage("주간목표 달성률은 대쉬보드에 표시됩니다.")
+                                                .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                    }
+                                                })
+                                                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        UserService.buzzable = true;
+                                                        getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("FIRST_RUN", false).apply();
+                                                        Toast.makeText(InitialActivity.this, "지금부터 자세 분석을 시작됩니다.", Toast.LENGTH_LONG).show();
+                                                        mDatabase.child(UserService.userKey).child("setting").child("week_goal").setValue(goals[picker.getValue()]);
+                                                        startActivity(new Intent(InitialActivity.this, MainActivity.class));
+                                                        finish();
+                                                    }
+                                                }).show();
+                                    }
+                                });
+                            }
+                        }).show();
+            }
+        });
+    }
+
+    private void showSetposeLayout() {
+        FrameLayout initial = findViewById(R.id.initial);
+        ChildrenEnable.set(false, initial);
+        final SetposeLayout dialog = new SetposeLayout(this);
+        dialog.getButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showInitialThird();
+                dialog.close();
+            }
+        });
+        initial.addView(dialog);
     }
 
     private void setupActionbar() {

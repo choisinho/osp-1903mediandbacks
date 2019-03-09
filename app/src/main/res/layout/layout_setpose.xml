@@ -16,7 +16,7 @@
         tools:context=".PwsearchLayout">
 
         <Button
-            android:id="@+id/rightpose_close"
+            android:id="@+id/setpose_close"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_alignParentTop="true"
@@ -25,7 +25,7 @@
             android:background="@drawable/pwsearch_x_icon" />
 
         <TextView
-            android:id="@+id/rightpose_title"
+            android:id="@+id/setpose_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -38,19 +38,19 @@
             android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/rightpose_image"
+            android:id="@+id/setpose_image"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_below="@id/rightpose_title"
+            android:layout_below="@id/setpose_title"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:background="@drawable/app_symbolmark" />
 
         <TextView
-            android:id="@+id/rightpose_text"
+            android:id="@+id/setpose_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/rightpose_image"
+            android:layout_below="@id/setpose_image"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:text="메디앤백스를 바르게 착용해주세요. \n준비가 완료되면 버튼을 클릭해주세요."
@@ -59,11 +59,11 @@
             android:textSize="14sp" />
 
         <Button
-            android:id="@+id/rightpose_done"
+            android:id="@+id/setpose_done"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:layout_width="150dp"
             android:layout_height="40dp"
-            android:layout_below="@id/rightpose_text"
+            android:layout_below="@id/setpose_text"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp"
             android:background="@drawable/app_button_red"
