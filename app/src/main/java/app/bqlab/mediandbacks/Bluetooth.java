@@ -39,7 +39,7 @@ public class Bluetooth {
         pairedDevices = mBTAdapter.getBondedDevices();
     }
 
-    public void setup() {
+    void setup() {
         if (!mBluetooth.isBluetoothAvailable()) {
             new AlertDialog.Builder(mContext)
                     .setCancelable(false)
@@ -59,7 +59,7 @@ public class Bluetooth {
         }
     }
 
-    private void connect(String name) {
+    private void autoConnect(String name) {
         if (isPaired(name)) {
             if (mBTAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
                 mActivity.startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE), REQUEST_DISCOVERABLE);

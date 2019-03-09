@@ -26,9 +26,7 @@ public class InitialActivity extends AppCompatActivity {
     private static final int ACCESS_COARSE_LOCATION = 2;
     //objects
     DatabaseReference mDatabase;
-    BluetoothSPP mBluetooth;
-    BluetoothAdapter mBTAdapter;
-    Set<BluetoothDevice> pairedDevices;
+    Bluetooth mBluetooth;
     //layouts
     ActionBar actionBar;
 
@@ -45,9 +43,7 @@ public class InitialActivity extends AppCompatActivity {
         InternetCheck.showDialogAfterCheck(this);
         PermissionCheck.checkLocationPermission(this);
         //initialize
-        mBluetooth = new BluetoothSPP(this);
-        mBTAdapter = BluetoothAdapter.getDefaultAdapter();
-        pairedDevices = mBTAdapter.getBondedDevices();
+        mBluetooth = new Bluetooth(this, this);
         //call
         showInitialFirst();
     }
@@ -102,7 +98,7 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_fourth).setVisibility(View.GONE);
         findViewById(R.id.initial_fifth).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_second_title));
-
+        mBluetooth.setup();
     }
 
     private void setupActionbar() {
