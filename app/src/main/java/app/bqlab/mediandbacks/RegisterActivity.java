@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -158,7 +159,7 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         } else {
             for (String id : registeredIds) {
-                if (id.equals(userId)) {
+                if (id.equals(String.valueOf(userId.hashCode()))) {
                     Toast.makeText(RegisterActivity.this, "이미 아이디가 존재합니다.", Toast.LENGTH_LONG).show();
                     return false;
                 }
