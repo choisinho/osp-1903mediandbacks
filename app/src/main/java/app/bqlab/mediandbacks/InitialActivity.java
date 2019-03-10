@@ -33,7 +33,7 @@ public class InitialActivity extends AppCompatActivity {
     private static final int ACCESS_COARSE_LOCATION = 2;
     //objects
     DatabaseReference mDatabase;
-    BluetoothSetting mBluetooth;
+    Bluetooth mBluetooth;
     //layouts
     ActionBar actionBar;
 
@@ -50,7 +50,7 @@ public class InitialActivity extends AppCompatActivity {
         InternetCheck.showDialogAfterCheck(this);
         PermissionCheck.checkLocationPermission(this);
         //initialize
-        mBluetooth = new BluetoothSetting(this, this);
+        mBluetooth = new Bluetooth(this, this);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         //call method
         showInitialFirst();
@@ -60,11 +60,11 @@ public class InitialActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == Activity.RESULT_CANCELED) {
             switch (requestCode) {
-                case BluetoothSetting.REQUEST_ENABLE_BLUETOOTH:
+                case Bluetooth.REQUEST_ENABLE_BLUETOOTH:
                     Toast.makeText(InitialActivity.this, "준비가 끝나면 다시 시도하세요.", Toast.LENGTH_LONG).show();
                     showInitialFirst();
                     break;
-                case BluetoothSetting.REQUEST_DISCOVERABLE:
+                case Bluetooth.REQUEST_DISCOVERABLE:
                     Toast.makeText(InitialActivity.this, "준비가 끝나면 다시 시도하세요.", Toast.LENGTH_LONG).show();
                     showInitialFirst();
                     break;
@@ -72,10 +72,11 @@ public class InitialActivity extends AppCompatActivity {
             }
         } else {
             switch (requestCode) {
-                case BluetoothSetting.REQUEST_ENABLE_BLUETOOTH:
+                case Bluetooth.REQUEST_ENABLE_BLUETOOTH:
                     mBluetooth.setup();
                     break;
-                case BluetoothSetting.REQUEST_DISCOVERABLE:
+                case Bluetooth.REQUEST_DISCOVERABLE:
+                    ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button2));
                     mBluetooth.autoConnect();
                     break;
 
@@ -156,12 +157,14 @@ public class InitialActivity extends AppCompatActivity {
             public void onDeviceDisconnected() {
                 Log.d("InitialActivity", "Disconnected to device");
                 Toast.makeText(InitialActivity.this, "장치와의 연결이 끊겼습니다.", Toast.LENGTH_LONG).show();
+                showInitialFirst();
             }
 
             @Override
             public void onDeviceConnectionFailed() {
                 Log.d("InitialActivity", "Failed to connect device");
                 Toast.makeText(InitialActivity.this, "장치와 연결할 수 없습니다.", Toast.LENGTH_LONG).show();
+                showInitialFirst();
             }
         });
         findViewById(R.id.initial_second_button).setOnClickListener(new View.OnClickListener() {
@@ -270,7 +273,8 @@ public class InitialActivity extends AppCompatActivity {
                                                         getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("FIRST_RUN", false).apply();
                                                         Toast.makeText(InitialActivity.this, "지금부터 자세 분석을 시작됩니다.", Toast.LENGTH_LONG).show();
                                                         mDatabase.child(UserService.userKey).child("setting").child("week_goal").setValue(goals[picker.getValue()]);
-                                                        startActivity(new Intent(InitialActivity.this, MainActivity.class));
+                                                        Intent i = new Intent(InitialActivity.this, MainActivity.class);
+                                                        startActivity(i);
                                                         finish();
                                                     }
                                                 }).show();

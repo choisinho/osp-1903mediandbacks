@@ -89,7 +89,7 @@ public class UserService extends Service implements Runnable {
         userRegisterDate = Objects.requireNonNull(dataSnapshot.child("info").child("register_date").getValue()).toString();
         //setting
         notifyDelay = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("notify_delay").getValue())).intValue();
-        weekGoal = Objects.requireNonNull(dataSnapshot.child("setting").child("week_time").getValue()).toString();
+        weekGoal = Objects.requireNonNull(dataSnapshot.child("setting").child("week_goal").getValue()).toString();
         goodPose = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("good_pose").getValue())).intValue();
         badPose = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("bad_pose").getValue())).intValue();
     }

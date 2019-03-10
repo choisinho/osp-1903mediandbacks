@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -74,22 +75,21 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }).show();
         } else {
-            if (ServiceCheck.isRunning(this, UserService.class.getName())) {
-                Toast.makeText(this, "이미 로그인된 아이디입니다. 잠시후 다시 로그틴을 해주세요.", Toast.LENGTH_LONG).show();
+            if (ServiceCheck.isRunning(this, UserService.class.getName()))
                 stopService(new Intent(LoginActivity.this, UserService.class));
-                finishAffinity();
+            if (getSharedPreferences("setting", MODE_PRIVATE).getBoolean("FIRST_RUN", true)) {
+                UserService.userId = id;
+                UserService.buzzable = false;
+                UserService.userKey = String.valueOf(id.hashCode());
+                startService(new Intent(this, UserService.class));
+                startActivity(new Intent(this, InitialActivity.class));
+                finish();
             } else {
-                if (getSharedPreferences("setting", MODE_PRIVATE).getBoolean("FIRST_RUN", true)) {
-                    UserService.userId = id;
-                    UserService.buzzable = false;
-                    UserService.userKey = String.valueOf(id.hashCode());
-                    startActivity(new Intent(this, InitialActivity.class));
-                    finish();
-                } else {
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    UserService.userId = id;
-                    finish();
-                }
+                UserService.userId = id;
+                UserService.userKey = String.valueOf(id.hashCode());
+                startService(new Intent(this, UserService.class));
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
             }
         }
     }

@@ -118,7 +118,7 @@ public class RegisterActivity extends AppCompatActivity {
                     mDatabase.child(userKey).child("info").child("name").setValue(userName);
                     mDatabase.child(userKey).child("info").child("sex").setValue(userSex);
                     mDatabase.child(userKey).child("info").child("birthday").setValue(userBirthday);
-                    mDatabase.child(userKey).child("info").child("register_day").setValue(userRegisterDay);
+                    mDatabase.child(userKey).child("info").child("register_date").setValue(userRegisterDay);
                     //data
                     mDatabase.child(userKey).child("data").child("realtime").setValue(0);
                     mDatabase.child(userKey).child("data").child(UserService.today).child("bad").setValue(0);
