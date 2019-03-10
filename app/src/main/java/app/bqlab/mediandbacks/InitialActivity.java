@@ -157,10 +157,12 @@ public class InitialActivity extends AppCompatActivity {
                 UserService.deviceConnected = false;
                 Log.d("MainActivity", "Disconnected to device");
                 Toast.makeText(InitialActivity.this, "장치와의 연결이 끊겼습니다.", Toast.LENGTH_LONG).show();
+                showInitialFirst();
             }
 
             @Override
             public void onDeviceConnectionFailed() {
+                UserService.deviceConnected = false;
                 Log.d("InitialActivity", "Failed to connect device");
                 Toast.makeText(InitialActivity.this, "장치와 연결할 수 없습니다.", Toast.LENGTH_LONG).show();
                 showInitialFirst();

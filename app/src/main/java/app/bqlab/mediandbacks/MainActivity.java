@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -40,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
     Bluetooth mBluetooth;
     DatabaseReference mDatabase;
     //layouts
+    FrameLayout main;
     PieChart mainChart;
+    ProgressLayout progress;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         connectDevice();
                     }
-                }).show();
+                })
+                .show();
     }
 
     @Override
@@ -87,6 +91,9 @@ public class MainActivity extends AppCompatActivity {
         //initialize
         mBluetooth = new Bluetooth(this, this);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        main = findViewById(R.id.main);
+        mainChart =findViewById(R.id.main_dashboard_chart);
+        progress = new ProgressLayout(this);
         //setup
         ((SwipeRefreshLayout) findViewById(R.id.main_refresh_layout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -119,8 +126,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "이미 장치와 연결되어 있습니다.", Toast.LENGTH_LONG).show();
         } else {
             Log.d("MainActivity", "Start to connect device");
-            ChildrenEnable.set(false, (ViewGroup) findViewById(R.id.main));
-            Toast.makeText(this, "장치와의 연결을 시작합니다.", Toast.LENGTH_LONG).show();
+            main.addView(progress);
+            ChildrenEnable.set(false, main);
             mBluetooth.getSetting().setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
                 @Override
                 public void onDataReceived(byte[] data, String message) {
@@ -134,9 +141,9 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onDeviceConnected(String name, String address) {
                     UserService.dataTotal = 1;
-                    ChildrenEnable.set(true, (ViewGroup) findViewById(R.id.main));
+                    main.removeView(progress);
+                    ChildrenEnable.set(true, main);
                     Log.d("MainActivity", "Connected to device");
-                    Toast.makeText(MainActivity.this, "장치와 연결되었습니다.", Toast.LENGTH_LONG).show();
                 }
 
                 @Override
@@ -148,6 +155,9 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onDeviceConnectionFailed() {
+                    main.removeView(progress);
+                    ChildrenEnable.set(true, main);
+                    UserService.deviceConnected = false;
                     Log.d("MainActivity", "Failed to connect device");
                     Toast.makeText(MainActivity.this, "장치와 연결할 수 없습니다.", Toast.LENGTH_LONG).show();
                 }
