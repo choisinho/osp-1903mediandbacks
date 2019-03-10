@@ -21,8 +21,6 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import app.akexorcist.bluetotohspp.library.BluetoothSPP;
-
 public class MainActivity extends AppCompatActivity {
 
     //constants
@@ -51,6 +49,14 @@ public class MainActivity extends AppCompatActivity {
         InternetCheck.showDialogAfterCheck(this);
         showRefreshDialog();
         init();
+        new AlertDialog.Builder(this)
+                .setMessage("연결?")
+                .setPositiveButton("ㅇㅇ", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        connectDevice();
+                    }
+                }).show();
     }
 
     @Override
@@ -135,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onDeviceDisconnected() {
+                    UserService.deviceConnected = false;
                     Log.d("MainActivity", "Disconnected to device");
                     Toast.makeText(MainActivity.this, "장치와의 연결이 끊겼습니다.", Toast.LENGTH_LONG).show();
                 }

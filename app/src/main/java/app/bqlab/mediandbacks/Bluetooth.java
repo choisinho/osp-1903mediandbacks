@@ -18,9 +18,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-import app.akexorcist.bluetotohspp.library.BluetoothSPP;
-import app.akexorcist.bluetotohspp.library.BluetoothState;
-
 class Bluetooth implements Serializable {
     //constants
     static final int REQUEST_ENABLE_BLUETOOTH = 1000;

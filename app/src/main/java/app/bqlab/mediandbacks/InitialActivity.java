@@ -22,8 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
-
-import app.akexorcist.bluetotohspp.library.BluetoothSPP;
+import java.util.Objects;
 
 public class InitialActivity extends AppCompatActivity {
 
@@ -155,9 +154,9 @@ public class InitialActivity extends AppCompatActivity {
 
             @Override
             public void onDeviceDisconnected() {
-                Log.d("InitialActivity", "Disconnected to device");
+                UserService.deviceConnected = false;
+                Log.d("MainActivity", "Disconnected to device");
                 Toast.makeText(InitialActivity.this, "장치와의 연결이 끊겼습니다.", Toast.LENGTH_LONG).show();
-                showInitialFirst();
             }
 
             @Override
