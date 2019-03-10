@@ -221,6 +221,7 @@ public class BluetoothService {
                 mmServerSocket.close();
                 mmServerSocket = null;
             } catch (IOException ignored) {
+            } catch (NullPointerException ignored) {
             }
         }
 

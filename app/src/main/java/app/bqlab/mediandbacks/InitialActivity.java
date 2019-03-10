@@ -30,6 +30,8 @@ public class InitialActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BLUETOOTH = 0;
     private static final int REQUEST_DISCOVERABLE = 1;
     private static final int ACCESS_COARSE_LOCATION = 2;
+    //virables
+    boolean mainToInitial;
     //objects
     DatabaseReference mDatabase;
     Bluetooth mBluetooth;
@@ -47,12 +49,14 @@ public class InitialActivity extends AppCompatActivity {
     private void init() {
         //check
         InternetCheck.showDialogAfterCheck(this);
+        InternetCheck.showDialogAfterCheck(this);
         PermissionCheck.checkLocationPermission(this);
         //initialize
         mBluetooth = new Bluetooth(this, this);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mainToInitial = getIntent().getBooleanExtra("mainToInitial", false);
         //call method
-        showInitialFirst();
+        checkEnterOption();
     }
 
     @Override
@@ -155,16 +159,24 @@ public class InitialActivity extends AppCompatActivity {
             @Override
             public void onDeviceDisconnected() {
                 UserService.deviceConnected = false;
+                mBluetooth.getSetting().disconnect();
+                mBluetooth.getSetting().cancelDiscovery();
                 Log.d("MainActivity", "Disconnected to device");
                 Toast.makeText(InitialActivity.this, "장치와의 연결이 끊겼습니다.", Toast.LENGTH_LONG).show();
+                ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button));
+                findViewById(R.id.initial_second_button).setBackground(getResources().getDrawable(R.drawable.app_button_gray));
                 showInitialFirst();
             }
 
             @Override
             public void onDeviceConnectionFailed() {
                 UserService.deviceConnected = false;
+                mBluetooth.getSetting().disconnect();
+                mBluetooth.getSetting().cancelDiscovery();
                 Log.d("InitialActivity", "Failed to connect device");
                 Toast.makeText(InitialActivity.this, "장치와 연결할 수 없습니다.", Toast.LENGTH_LONG).show();
+                ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button));
+                findViewById(R.id.initial_second_button).setBackground(getResources().getDrawable(R.drawable.app_button_gray));
                 showInitialFirst();
             }
         });
@@ -304,5 +316,12 @@ public class InitialActivity extends AppCompatActivity {
     private void setupActionbar() {
         Objects.requireNonNull(getSupportActionBar()).setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.actionbar_initial);
+    }
+
+    private void checkEnterOption() {
+        if (mainToInitial)
+            showInitialThird();
+        else
+            showInitialFirst();
     }
 }

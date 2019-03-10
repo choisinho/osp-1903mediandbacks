@@ -2,20 +2,19 @@ package app.bqlab.mediandbacks;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothClass;
-import android.bluetooth.BluetoothManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -42,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference mDatabase;
     //layouts
     FrameLayout main;
+    LinearLayout mainBar;
     PieChart mainChart;
-    ProgressLayout progress;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,15 +51,7 @@ public class MainActivity extends AppCompatActivity {
         InternetCheck.showDialogAfterCheck(this);
         showRefreshDialog();
         init();
-        new AlertDialog.Builder(this)
-                .setMessage("연결?")
-                .setPositiveButton("ㅇㅇ", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        connectDevice();
-                    }
-                })
-                .show();
+        showLayoutByIndex(layoutIndex);
     }
 
     @Override
@@ -79,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
                     mBluetooth.setup();
                     break;
                 case Bluetooth.REQUEST_DISCOVERABLE:
-                    Toast.makeText(this, "장치와 연결중입니다.", Toast.LENGTH_LONG).show();
                     mBluetooth.autoConnect();
                     break;
 
@@ -87,23 +77,41 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void init() {
-        //initialize
-        mBluetooth = new Bluetooth(this, this);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        main = findViewById(R.id.main);
-        mainChart =findViewById(R.id.main_dashboard_chart);
-        progress = new ProgressLayout(this);
-        //setup
-        ((SwipeRefreshLayout) findViewById(R.id.main_refresh_layout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
+    @Override
+    public void onBackPressed() {
+        switch (layoutIndex) {
+            case LAYOUT_MAIN_DASHBOARD:
+                finishAffinity();
+                break;
+            case LAYOUT_MAIN_ANALYSIS:
+                showLayoutByIndex(LAYOUT_MAIN_DASHBOARD);
+                break;
+            case LAYOUT_MAIN_STRETCH:
+                showLayoutByIndex(LAYOUT_MAIN_DASHBOARD);
+                break;
+            case LAYOUT_MAIN_SETTING:
+                showLayoutByIndex(LAYOUT_MAIN_DASHBOARD);
+                break;
+            case LAYOUT_MAIN_SETTING_CONNECT:
+                showLayoutByIndex(LAYOUT_MAIN_SETTING);
+                break;
+            case LAYOUT_MAIN_SETTING_NOTICE:
+                showLayoutByIndex(LAYOUT_MAIN_SETTING);
+                break;
+            case LAYOUT_MAIN_SETTING_NOTIFY:
+                showLayoutByIndex(LAYOUT_MAIN_SETTING);
+                break;
+            case LAYOUT_MAIN_SETTING_VERSION:
+                showLayoutByIndex(LAYOUT_MAIN_SETTING);
+                break;
+            case LAYOUT_MAIN_SETTING_PROFILE:
+                showLayoutByIndex(LAYOUT_MAIN_SETTING);
+                break;
+        }
     }
 
-    private void connectDevice() {
+    private void init() {
+        //check service running
         if (!ServiceCheck.isRunning(this, UserService.class.getName())) {
             Log.d("MainActivity", "Userservice not running");
             new AlertDialog.Builder(this)
@@ -121,59 +129,379 @@ public class MainActivity extends AppCompatActivity {
                             finish();
                         }
                     }).show();
-        } else if (UserService.deviceConnected) {
-            Log.d("MainActivity", "Already device connected");
-            Toast.makeText(this, "이미 장치와 연결되어 있습니다.", Toast.LENGTH_LONG).show();
-        } else {
-            Log.d("MainActivity", "Start to connect device");
-            main.addView(progress);
-            ChildrenEnable.set(false, main);
-            mBluetooth.getSetting().setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
-                @Override
-                public void onDataReceived(byte[] data, String message) {
-                    UserService.deviceConnected = true;
-                    UserService.data = Integer.valueOf(message) - 90;
-                    mDatabase.child(UserService.userKey).child("data").child("realtime").setValue(UserService.data);
-                    Log.d("MainActivity", "Realtime data: " + String.valueOf(UserService.data));
-                }
-            });
-            mBluetooth.getSetting().setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
-                @Override
-                public void onDeviceConnected(String name, String address) {
-                    UserService.dataTotal = 1;
-                    main.removeView(progress);
-                    ChildrenEnable.set(true, main);
-                    Log.d("MainActivity", "Connected to device");
-                }
-
-                @Override
-                public void onDeviceDisconnected() {
-                    UserService.deviceConnected = false;
-                    Log.d("MainActivity", "Disconnected to device");
-                    Toast.makeText(MainActivity.this, "장치와의 연결이 끊겼습니다.", Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void onDeviceConnectionFailed() {
-                    main.removeView(progress);
-                    ChildrenEnable.set(true, main);
-                    UserService.deviceConnected = false;
-                    Log.d("MainActivity", "Failed to connect device");
-                    Toast.makeText(MainActivity.this, "장치와 연결할 수 없습니다.", Toast.LENGTH_LONG).show();
-                }
-            });
-            mBluetooth.checkup();
         }
-
+        //initialize
+        mBluetooth = new Bluetooth(this, this);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        main = findViewById(R.id.main);
+        mainBar = findViewById(R.id.main_bar);
+        mainChart = findViewById(R.id.main_dashboard_chart);
+        layoutIndex = getIntent().getIntExtra("refreshIndex", 0);
+        //setup
+        ((SwipeRefreshLayout) findViewById(R.id.main_refresh_layout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+        //call setup methods
+        setMainBar();
+        setMainDashboard();
+        setMainAnalisys();
+        setMainStretch();
+        setMainSetting();
+        setMainSettingConnect();
+        setMainSettingNotice();
+        setMainSettingNotify();
+        setMainSettingProfile();
+        setMainSettingVersion();
     }
 
-    private void refresh() {
-        finish();
-        overridePendingTransition(0, 0);
-        startActivity(getIntent());
-        overridePendingTransition(0, 0);
-        Toast.makeText(MainActivity.this, "새로고침이 완료되었습니다.", Toast.LENGTH_LONG).show();
-        ((SwipeRefreshLayout) findViewById(R.id.main_refresh_layout)).setRefreshing(false);
+    private void setMainBar() {
+        findViewById(R.id.main_bar_dashboard).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_DASHBOARD);
+            }
+        });
+        findViewById(R.id.main_bar_analysis).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_ANALYSIS);
+            }
+        });
+        findViewById(R.id.main_bar_stretch).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_STRETCH);
+            }
+        });
+        findViewById(R.id.main_bar_setting).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_SETTING);
+            }
+        });
+        findViewById(R.id.main_dashboard_total).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_ANALYSIS);
+            }
+        });
+        findViewById(R.id.main_dashboard_vibrate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_ANALYSIS);
+            }
+        });
+        findViewById(R.id.main_dashboard_analysis).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_ANALYSIS);
+            }
+        });
+        findViewById(R.id.main_dashboard_stretch).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_STRETCH);
+            }
+        });
+        findViewById(R.id.main_analysis_top_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_DASHBOARD);
+            }
+        });
+    }
+
+    private void setMainDashboard() {
+        findViewById(R.id.main_dashboard_total).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_ANALYSIS);
+            }
+        });
+        findViewById(R.id.main_dashboard_vibrate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_ANALYSIS);
+            }
+        });
+        findViewById(R.id.main_dashboard_analysis).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_ANALYSIS);
+            }
+        });
+        findViewById(R.id.main_dashboard_stretch).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_STRETCH);
+            }
+        });
+    }
+
+    private void setMainAnalisys() {
+        findViewById(R.id.main_analysis_top_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_DASHBOARD);
+            }
+        });
+        String today = UserService.today.substring(0, 4) + "-" + UserService.today.substring(4, 6) + "-" + UserService.today.substring(6, 8);
+        String period = today + " ~ " + today;
+        ((TextView) findViewById(R.id.main_analysis_top_date)).setText(period);
+    }
+
+    private void setMainStretch() {
+        findViewById(R.id.main_stretch_top_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_DASHBOARD);
+            }
+        });
+    }
+
+    private void setMainSetting() {
+        if (UserService.deviceConnected) {
+            ((TextView) findViewById(R.id.main_setting_top_connect_state)).setText("연결 됨");
+            findViewById(R.id.main_setting_connect_top_circle).setBackground(getResources().getDrawable(R.drawable.app_blue_circle));
+
+        } else {
+            ((TextView) findViewById(R.id.main_setting_top_connect_state)).setText("연결 안됨");
+            findViewById(R.id.main_setting_connect_top_circle).setBackground(getResources().getDrawable(R.drawable.app_white_circle));
+        }
+        findViewById(R.id.main_setting_top_connect).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_SETTING_CONNECT);
+            }
+        });
+        findViewById(R.id.main_setting_set_notify).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_SETTING_NOTIFY);
+            }
+        });
+        findViewById(R.id.main_setting_set_posture).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, InitialActivity.class);
+                i.putExtra("mainToInitial", true);
+                startActivity(i);
+            }
+        });
+        findViewById(R.id.main_setting_my_profile).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_SETTING_PROFILE);
+            }
+        });
+        findViewById(R.id.main_setting_my_version).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_SETTING_VERSION);
+            }
+        });
+        findViewById(R.id.main_setting_my_notice).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_SETTING_NOTICE);
+            }
+        });
+    }
+
+    private void setMainSettingConnect() {
+        if (UserService.deviceConnected) {
+            ((TextView) findViewById(R.id.main_setting_connect_state)).setText("연결 됨");
+            ((TextView) findViewById(R.id.main_setting_connect_state)).setTextColor(getColor(R.color.colorWhiteNavy));
+            findViewById(R.id.main_setting_connect_button).setVisibility(View.GONE);
+        } else {
+            ((TextView) findViewById(R.id.main_setting_connect_state)).setText("연결 안됨");
+            ((TextView) findViewById(R.id.main_setting_connect_state)).setTextColor(getColor(R.color.colorRedPrimary));
+            findViewById(R.id.main_setting_connect_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.main_setting_connect_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    connectDevice();
+
+                }
+            });
+        }
+        findViewById(R.id.main_setting_connect_top_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_SETTING);
+            }
+        });
+    }
+
+    private void setMainSettingNotify() {
+        findViewById(R.id.main_setting_notify_top_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_SETTING);
+            }
+        });
+        findViewById(R.id.main_setting_notify_notify_time).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final ArrayAdapter<String> items = new ArrayAdapter<String>(MainActivity.this, android.R.layout.select_dialog_singlechoice);
+                items.addAll("즉시", "5초", "10초");
+                new AlertDialog.Builder(MainActivity.this)
+                        .setAdapter(items, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((TextView) findViewById(R.id.main_setting_notify_notify_time)).setText(new String[]{"즉시>", "5초>", "10초>"}[which]);
+                                mDatabase.child(UserService.userKey).child("setting").child("notify_delay").setValue(which * 5);
+                            }
+                        }).show();
+
+            }
+        });
+    }
+
+    private void setMainSettingProfile() {
+        ((TextView) findViewById(R.id.main_setting_profile_email)).setText(UserService.userId);
+        ((TextView) findViewById(R.id.main_setting_profile_name)).setText(UserService.userName);
+        ((TextView) findViewById(R.id.main_setting_profile_sex)).setText(UserService.userSex);
+        ((TextView) findViewById(R.id.main_setting_profile_birthday)).setText(UserService.userBirthday);
+        ((TextView) findViewById(R.id.main_setting_profile_register_date)).setText(UserService.userRegisterDate);
+        findViewById(R.id.main_setting_profile_top_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_SETTING);
+            }
+        });
+        findViewById(R.id.main_setting_profile_logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("지금 로그아웃 하시겠습니까?")
+                        .setMessage("로그아웃시 지금 설정한 결과는 삭제됩니다.")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                stopService(new Intent(MainActivity.this, UserService.class));
+                                Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                                i.putExtra("id", UserService.userId);
+                                startActivity(i);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).show();
+            }
+        });
+        findViewById(R.id.main_setting_profile_withdrawal).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("정말 회원탈퇴 하시겠습니까?")
+                        .setMessage("회원탈퇴를 하시면 메디앤백스를 사용할 수 없으며 재가입은 1주일 후에 가능합니다.")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mDatabase.child(UserService.userKey).removeValue();
+                                stopService(new Intent(MainActivity.this, UserService.class));
+                                startActivity(new Intent(MainActivity.this, StartActivity.class));
+                                Toast.makeText(MainActivity.this, "탈퇴하였습니다.", Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).show();
+            }
+        });
+    }
+
+    private void setMainSettingVersion() {
+        try {
+            ((TextView) findViewById(R.id.main_setting_version_current)).setText(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+            ((TextView) findViewById(R.id.main_setting_version_latest)).setText(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+            ((TextView) findViewById(R.id.main_setting_version_using)).setText("최신버전을 사용 중 입니다.\n");
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        findViewById(R.id.main_setting_version_top_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_SETTING);
+            }
+        });
+        findViewById(R.id.main_setting_version_upgrade).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage("스토어에서 정보를 불러올 수 없습니다.")
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+            }
+        });
+    }
+
+    private void setMainSettingNotice() {
+        findViewById(R.id.main_setting_notice_top_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_SETTING);
+            }
+        });
+    }
+
+    private void showLayoutByIndex(int idx) {
+        layoutIndex = idx;
+        InternetCheck.showDialogAfterCheck(this);
+        FrameLayout main = findViewById(R.id.main);
+        LinearLayout mainBar = findViewById(R.id.main_bar);
+        for (int i = 0; i < main.getChildCount(); i++)
+            main.getChildAt(i).setVisibility(View.GONE);
+        main.getChildAt(idx).setVisibility(View.VISIBLE);
+        if (idx < LAYOUT_MAIN_SETTING_CONNECT) {
+            switch (idx) {
+                case LAYOUT_MAIN_DASHBOARD:
+                    ((LinearLayout) mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_p));
+                    ((LinearLayout) mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analysis_np));
+                    ((LinearLayout) mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_np));
+                    ((LinearLayout) mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_np));
+                    break;
+                case LAYOUT_MAIN_ANALYSIS:
+                    ((LinearLayout) mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_np));
+                    ((LinearLayout) mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analysis_p));
+                    ((LinearLayout) mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_np));
+                    ((LinearLayout) mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_np));
+                    break;
+                case LAYOUT_MAIN_STRETCH:
+                    ((LinearLayout) mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_np));
+                    ((LinearLayout) mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analysis_np));
+                    ((LinearLayout) mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_p));
+                    ((LinearLayout) mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_np));
+                    break;
+                case LAYOUT_MAIN_SETTING:
+                    ((LinearLayout) mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_np));
+                    ((LinearLayout) mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analysis_np));
+                    ((LinearLayout) mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_np));
+                    ((LinearLayout) mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_p));
+                    break;
+            }
+        } else {
+            ((LinearLayout) mainBar.getChildAt(0)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_dashboard_np));
+            ((LinearLayout) mainBar.getChildAt(1)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_analysis_np));
+            ((LinearLayout) mainBar.getChildAt(2)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_stretch_np));
+            ((LinearLayout) mainBar.getChildAt(3)).getChildAt(0).setBackground(getResources().getDrawable(R.drawable.main_bar_setting_p));
+        }
     }
 
     private void showRefreshDialog() {
@@ -201,5 +529,66 @@ public class MainActivity extends AppCompatActivity {
                     })
                     .show();
         }
+    }
+
+    private void refresh() {
+        finish();
+        Intent i = getIntent();
+        i.putExtra("refreshIndex", layoutIndex);
+        overridePendingTransition(0, 0);
+        startActivity(getIntent());
+        overridePendingTransition(0, 0);
+        ((SwipeRefreshLayout) findViewById(R.id.main_refresh_layout)).setRefreshing(false);
+    }
+
+    private void connectDevice() {
+        if (UserService.deviceConnected) {
+            Log.d("MainActivity", "Already device connected");
+            Toast.makeText(this, "이미 장치와 연결되어 있습니다.", Toast.LENGTH_LONG).show();
+        } else {
+            Log.d("MainActivity", "Start to connect device");
+            final ProgressLayout p = new ProgressLayout(this);
+            main.addView(p);
+            ChildrenEnable.set(false, main);
+            ChildrenEnable.set(false, mainBar);
+            mBluetooth.getSetting().setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
+                @Override
+                public void onDataReceived(byte[] data, String message) {
+                    UserService.deviceConnected = true;
+                    UserService.data = Integer.valueOf(message) - 90;
+                    mDatabase.child(UserService.userKey).child("data").child("realtime").setValue(UserService.data);
+                    Log.d("MainActivity", "Realtime data: " + String.valueOf(UserService.data));
+                }
+            });
+            mBluetooth.getSetting().setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
+                @Override
+                public void onDeviceConnected(String name, String address) {
+                    UserService.dataTotal = 1;
+                    main.removeView(p);
+                    ChildrenEnable.set(true, main);
+                    ChildrenEnable.set(true, mainBar);
+                    Log.d("MainActivity", "Connected to device");
+                    refresh();
+                }
+
+                @Override
+                public void onDeviceDisconnected() {
+                    UserService.deviceConnected = false;
+                    Log.d("MainActivity", "Disconnected to device");
+                    Toast.makeText(MainActivity.this, "장치와의 연결이 끊겼습니다.", Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onDeviceConnectionFailed() {
+                    main.removeView(p);
+                    ChildrenEnable.set(true, main);
+                    UserService.deviceConnected = false;
+                    Log.d("MainActivity", "Failed to connect device");
+                    Toast.makeText(MainActivity.this, "장치와 연결할 수 없습니다.", Toast.LENGTH_LONG).show();
+                }
+            });
+            mBluetooth.checkup();
+        }
+
     }
 }

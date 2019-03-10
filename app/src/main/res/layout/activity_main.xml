@@ -1220,6 +1220,7 @@
                             android:layout_width="18dp"
                             android:layout_height="26dp"
                             android:layout_alignParentTop="true"
+                            android:layout_marginStart="20dp"
                             android:layout_marginTop="30dp"
                             android:background="@drawable/app_back_button" />
 
