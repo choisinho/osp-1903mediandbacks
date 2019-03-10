@@ -401,7 +401,7 @@
                     android:background="@color/colorWhiteDarker" />
 
                 <LinearLayout
-                    android:id="@+id/main_analysis_right"
+                    android:id="@+id/main_analysis_good"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -420,7 +420,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
-                            android:text="@string/main_analysis_right_title"
+                            android:text="@string/main_analysis_good_title"
                             android:textAlignment="center"
                             android:textColor="@color/colorGrayDark"
                             android:textSize="14sp"
@@ -430,14 +430,14 @@
                             android:layout_width="50dp"
                             android:layout_height="70dp"
                             android:layout_marginTop="10dp"
-                            android:background="@drawable/main_analysis_right_icon" />
+                            android:background="@drawable/main_analysis_good_icon" />
 
                         <TextView
-                            android:id="@+id/main_analysis_right_content"
+                            android:id="@+id/main_analysis_good_content"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
-                            android:text="@string/main_analysis_right_default"
+                            android:text="@string/main_analysis_good_default"
                             android:textAlignment="center"
                             android:textColor="@color/colorGrayDark"
                             android:textSize="14sp"
@@ -1318,14 +1318,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="5dp"
                                 android:layout_marginTop="15dp"
-                                android:text="@string/main_setting_notify_right"
+                                android:text="@string/main_setting_notify_good"
                                 android:textAllCaps="false"
                                 android:textColor="@color/colorBlack"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/main_setting_notify_notify_right"
+                                android:id="@+id/main_setting_notify_notify_good"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
@@ -1333,7 +1333,7 @@
                                 android:layout_marginEnd="5dp"
                                 android:clickable="true"
                                 android:focusable="true"
-                                android:text="@string/main_setting_notify_notify_right_default"
+                                android:text="@string/main_setting_notify_notify_good_default"
                                 android:textAlignment="textEnd"
                                 android:textColor="@color/colorBlack"
                                 android:textSize="16sp"

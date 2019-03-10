@@ -18,8 +18,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     final int LAYOUT_MAIN_SETTING_NOTICE = 8;
     //variables
     int layoutIndex;
-    String totalTimeText, rightTimeText, badTimeText;
+    String totalTimeText, goodTimeText, badTimeText;
     //objects
     Bluetooth mBluetooth;
     DatabaseReference mDatabase;
@@ -215,6 +220,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setMainDashboard() {
+        //setup layouts
         findViewById(R.id.main_dashboard_total).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,6 +245,81 @@ public class MainActivity extends AppCompatActivity {
                 showLayoutByIndex(LAYOUT_MAIN_STRETCH);
             }
         });
+        //setup layout
+        if (UserService.dataTotal != 0) {
+            ArrayList<PieEntry> values = new ArrayList<>();
+            mainChart.setUsePercentValues(true);
+            mainChart.getDescription().setEnabled(false);
+            mainChart.setTouchEnabled(false);
+            mainChart.setTransparentCircleRadius(0f);
+            mainChart.setExtraOffsets(0, 0, 0, 0);
+            mainChart.setDrawSliceText(false);
+            mainChart.setDrawHoleEnabled(true);
+            mainChart.setHoleRadius(90f);
+            mainChart.setHoleColor(getResources().getColor(R.color.colorWhite));
+            mainChart.getLegend().setEnabled(false);
+            values.add(new PieEntry(UserService.dataBad, "bad"));
+            values.add(new PieEntry(UserService.dataGood, "good"));
+            PieDataSet dataSet = new PieDataSet(values, "Data");
+            dataSet.setSliceSpace(0f);
+            dataSet.setColors(getResources().getColor(R.color.colorRedForChart), getResources().getColor(R.color.colorBlueForChart));
+            PieData pieData = new PieData(dataSet);
+            pieData.setValueTextSize(0f);
+            mainChart.setData(pieData);
+            String text = "나쁜 자세 " + String.valueOf((int) ((double) UserService.dataBad / (double) UserService.dataTotal * 100)) + "%";
+            if (UserService.dataBad < UserService.dataGood) {
+                ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorBlueForChart));
+                ((TextView) findViewById(R.id.main_dashboard_chart_state)).setVisibility(View.VISIBLE);
+                ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setText("GOOD");
+                ((TextView) findViewById(R.id.main_dashboard_chart_state)).setText(text);
+            } else {
+                ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorRedForChart));
+                ((TextView) findViewById(R.id.main_dashboard_chart_state)).setVisibility(View.VISIBLE);
+                ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setText("BAD");
+                ((TextView) findViewById(R.id.main_dashboard_chart_state)).setText(text);
+            }
+            String vibrateText = String.valueOf(UserService.dataBad) + "회";
+            ((TextView) findViewById(R.id.main_dashboard_vibrate_content)).setText(vibrateText);
+        } else {
+            ArrayList<PieEntry> values = new ArrayList<>();
+            mainChart.setUsePercentValues(true);
+            mainChart.getDescription().setEnabled(false);
+            mainChart.setTouchEnabled(false);
+            mainChart.setTransparentCircleRadius(0f);
+            mainChart.setExtraOffsets(0, 0, 0, 0);
+            mainChart.setDrawSliceText(false);
+            mainChart.setDrawHoleEnabled(true);
+            mainChart.setHoleRadius(90f);
+            mainChart.setHoleColor(getResources().getColor(R.color.colorWhite));
+            mainChart.getLegend().setEnabled(false);
+            values.add(new PieEntry(1f, "no data"));
+            PieDataSet dataSet = new PieDataSet(values, "Data");
+            dataSet.setSliceSpace(0f);
+            dataSet.setColors(getResources().getColor(R.color.colorWhiteDark));
+            PieData pieData = new PieData(dataSet);
+            pieData.setValueTextSize(0f);
+            mainChart.setData(pieData);
+            ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorWhiteDark));
+            findViewById(R.id.main_dashboard_chart_state).setVisibility(View.GONE);
+        }
+        if (UserService.dataBad > 3600)
+            goodTimeText = String.valueOf(UserService.dataGood / 3600) + "시간 " + String.valueOf((UserService.dataGood % 3600) / 60) + "분";
+        else
+            goodTimeText = String.valueOf((UserService.dataGood % 3600) / 60) + "분";
+        if (UserService.dataBad > 3600)
+            badTimeText = String.valueOf(UserService.dataBad / 3600) + "시간 " + String.valueOf((UserService.dataBad % 3600) / 60) + "분";
+        else
+            badTimeText = String.valueOf((UserService.dataBad % 3600) / 60) + "분";
+        if (UserService.dataTotal > 3600)
+            totalTimeText = String.valueOf(UserService.dataTotal / 3600) + "시간 " + String.valueOf((UserService.dataTotal % 3600) / 60) + "분";
+        else
+            totalTimeText = String.valueOf((UserService.dataTotal % 3600) / 60) + "분";
+        ((TextView) findViewById(R.id.main_analysis_time_content)).setText(String.valueOf(totalTimeText));
+        ((TextView) findViewById(R.id.main_analysis_vibrate_content)).setText("");
+        ((TextView) findViewById(R.id.main_analysis_good_content)).setText(goodTimeText);
+        ((TextView) findViewById(R.id.main_analysis_bad_content)).setText(badTimeText);
+        ((TextView) findViewById(R.id.main_dashboard_total_content)).setText(totalTimeText);
+        ((TextView) findViewById(R.id.main_analysis_vibrate_content)).setText(badTimeText);
     }
 
     private void setMainAnalisys() {
@@ -266,7 +347,6 @@ public class MainActivity extends AppCompatActivity {
         if (UserService.deviceConnected) {
             ((TextView) findViewById(R.id.main_setting_top_connect_state)).setText("연결 됨");
             findViewById(R.id.main_setting_connect_top_circle).setBackground(getResources().getDrawable(R.drawable.app_blue_circle));
-
         } else {
             ((TextView) findViewById(R.id.main_setting_top_connect_state)).setText("연결 안됨");
             findViewById(R.id.main_setting_connect_top_circle).setBackground(getResources().getDrawable(R.drawable.app_white_circle));
@@ -359,6 +439,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        String goodpose = String.valueOf(UserService.goodPose) + "도";
+        String badpose = String.valueOf(UserService.badPose) + "도";
+        ((TextView) findViewById(R.id.main_setting_notify_notify_good)).setText(goodpose);
+        ((TextView) findViewById(R.id.main_setting_notify_notify_bad)).setText(badpose);
     }
 
     private void setMainSettingProfile() {

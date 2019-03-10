@@ -71,8 +71,8 @@
     <string name="main_analysis_time_default">0분</string>
     <string name="main_analysis_vibrate_default">0회</string>
     <string name="main_analysis_vibrate_title">진동횟수</string>
-    <string name="main_analysis_right_title">바른 자세</string>
-    <string name="main_analysis_right_default">0분</string>
+    <string name="main_analysis_good_title">바른 자세</string>
+    <string name="main_analysis_good_default">0분</string>
     <string name="main_analysis_bad_default">0분</string>
     <string name="main_analysis_bad_title">나쁜 자세</string>
     <string name="main_stretch_top_title">메디앤백스와 운동하기</string>
@@ -102,8 +102,8 @@
     <string name="main_setting_notify_top_title">진동 알림 설정</string>
     <string name="main_setting_notify_time_title">알림 시간 설정</string>
     <string name="main_setting_notify_time_default">즉시 &gt;</string>
-    <string name="main_setting_notify_right">바른 자세 설정</string>
-    <string name="main_setting_notify_notify_right_default">0도</string>
+    <string name="main_setting_notify_good">바른 자세 설정</string>
+    <string name="main_setting_notify_notify_good_default">0도</string>
     <string name="main_setting_notify_bad_title">나쁜 자세 설정</string>
     <string name="main_setting_notify_bad_default">15도</string>
     <string name="main_setting_profile_top_title">프로필</string>

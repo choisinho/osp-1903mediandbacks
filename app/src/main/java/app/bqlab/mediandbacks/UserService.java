@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -59,6 +60,7 @@ public class UserService extends Service implements Runnable {
     public int onStartCommand(Intent intent, int flags, int startId) {
         setupDatabase();
         setupNotificaition(intent);
+        new Thread(this).start();
         return START_NOT_STICKY;
     }
 
@@ -67,6 +69,7 @@ public class UserService extends Service implements Runnable {
         threading = true;
         while (threading) {
             try {
+                Log.d("UserService", "isRunning");
                 processData(UserService.data);
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -95,19 +98,19 @@ public class UserService extends Service implements Runnable {
     }
 
     public void processData(int data) {
-        if (dataTotal != 0) {
+        if (dataTotal != 0 && deviceConnected) {
             database.child("data").child(today).child("total").setValue(dataTotal + 1);
             if (data > goodPose - 10 && data < goodPose + 10)
                 database.child("data").child(today).child("good").setValue(dataGood + 1);
             if (data > badPose - 10 && data < badPose + 10) {
-                database.child("data").child(today).child("badtime").setValue(dataBad + 1);
+                database.child("data").child(today).child("bad").setValue(dataBad + 1);
                 database.child("data").child(today).child("vibrate").setValue(dataBad);
                 makeNotification();
             }
         }
     }
 
-    public boolean checkToday(Iterable<DataSnapshot> daySnapshots) {
+    public void checkToday(Iterable<DataSnapshot> daySnapshots) {
         String today = TodayString.get();
         List<String> days = new ArrayList<>();
         for (DataSnapshot snapshot : daySnapshots) {
@@ -119,9 +122,7 @@ public class UserService extends Service implements Runnable {
             database.child("data").child(today).child("good").setValue(0);
             database.child("data").child(today).child("bad").setValue(0);
             UserService.today = today;
-            return false;
         }
-        return true;
     }
 
     private void setupDatabase() {

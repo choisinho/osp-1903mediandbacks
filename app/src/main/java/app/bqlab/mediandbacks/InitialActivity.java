@@ -282,6 +282,7 @@ public class InitialActivity extends AppCompatActivity {
                                                 .setPositiveButton("예", new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
+                                                        UserService.dataTotal += 1;
                                                         UserService.buzzable = true;
                                                         getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("FIRST_RUN", false).apply();
                                                         Toast.makeText(InitialActivity.this, "지금부터 자세 분석을 시작됩니다.", Toast.LENGTH_LONG).show();
