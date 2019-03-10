@@ -1,16 +1,12 @@
 package app.bqlab.mediandbacks;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -47,9 +43,8 @@ public class UserService extends Service implements Runnable {
     static boolean threading;
     static boolean deviceConnected;
     //objects
-    static DatabaseReference database;
-    public static NotificationManager notificationManager;
-    public static NotificationChannel notificationChannel;
+    static DatabaseReference mDatabase;
+    public static NotificationManagerCompat notificationManager;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -59,8 +54,6 @@ public class UserService extends Service implements Runnable {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         setupDatabase();
-        setupNotificaition(intent);
-        new Thread(this).start();
         return START_NOT_STICKY;
     }
 
@@ -99,12 +92,12 @@ public class UserService extends Service implements Runnable {
 
     public void processData(int data) {
         if (dataTotal != 0 && deviceConnected) {
-            database.child("data").child(today).child("total").setValue(dataTotal + 1);
+            mDatabase.child("data").child(today).child("total").setValue(dataTotal + 1);
             if (data > goodPose - 10 && data < goodPose + 10)
-                database.child("data").child(today).child("good").setValue(dataGood + 1);
+                mDatabase.child("data").child(today).child("good").setValue(dataGood + 1);
             if (data > badPose - 10 && data < badPose + 10) {
-                database.child("data").child(today).child("bad").setValue(dataBad + 1);
-                database.child("data").child(today).child("vibrate").setValue(dataBad);
+                mDatabase.child("data").child(today).child("bad").setValue(dataBad + 1);
+                mDatabase.child("data").child(today).child("vibrate").setValue(dataBad);
                 makeNotification();
             }
         }
@@ -117,17 +110,17 @@ public class UserService extends Service implements Runnable {
             days.add(Objects.requireNonNull(snapshot.getKey()));
         }
         if (!days.contains(today)) {
-            database.child("data").child(today).child("vibrate").setValue(0);
-            database.child("data").child(today).child("total").setValue(0);
-            database.child("data").child(today).child("good").setValue(0);
-            database.child("data").child(today).child("bad").setValue(0);
+            mDatabase.child("data").child(today).child("vibrate").setValue(0);
+            mDatabase.child("data").child(today).child("total").setValue(0);
+            mDatabase.child("data").child(today).child("good").setValue(0);
+            mDatabase.child("data").child(today).child("bad").setValue(0);
             UserService.today = today;
         }
     }
 
     private void setupDatabase() {
-        database = FirebaseDatabase.getInstance().getReference().child(String.valueOf(userId.hashCode()));
-        database.addValueEventListener(new ValueEventListener() {
+        mDatabase = FirebaseDatabase.getInstance().getReference().child(String.valueOf(userId.hashCode()));
+        mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 checkToday(dataSnapshot.child("data").getChildren());
@@ -140,53 +133,34 @@ public class UserService extends Service implements Runnable {
                 stopSelf();
             }
         });
-    }
-
-    private void setupNotificaition(Intent intent) {
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationChannel = new NotificationChannel("em", "알림", NotificationManager.IMPORTANCE_DEFAULT);
-            notificationChannel.setDescription("앱 알림");
-            notificationChannel.enableLights(true);
-            notificationChannel.enableVibration(true);
-            notificationChannel.setVibrationPattern(new long[]{100, 200, 100, 200});
-            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
-        String content = intent.getStringExtra("content");
-        Intent i = new Intent(this, MainActivity.class);
-        PendingIntent p = PendingIntent.getActivity(this, 0, i, 0);
-        Notification notification = new NotificationCompat.Builder(this, "알림")
-                .setContentText(content)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(p)
-                .build();
-        startForeground(1, notification);
-    }
-
-    public void makeNotification() {
-        if (buzzable) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                notificationManager.notify(0, new NotificationCompat.Builder(this, "알림")
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("알림")
-                        .setContentText("현재 나쁜 자세를 취하고 있습니다.")
-                        .setWhen(System.currentTimeMillis())
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setAutoCancel(true)
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .build());
-            } else {
-                notificationManager.notify(0, new Notification.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("알림")
-                        .setContentText("현재 나쁜 자세를 취하고 있습니다.")
-                        .setWhen(System.currentTimeMillis())
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setAutoCancel(true)
-                        .setPriority(Notification.PRIORITY_HIGH)
-                        .build());
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                new Thread(UserService.this).start();
             }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void makeNotification() {
+        try {
+            Thread.sleep(1000 * UserService.notifyDelay);
+            notificationManager = NotificationManagerCompat.from(this);
+            Notification notification = new Notification.Builder(this, App.CHANNAL_ID)
+                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                    .setContentTitle("알림")
+                    .setContentText("현재 나쁜 자세를 취하고 있습니다.")
+                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                    .setWhen(System.currentTimeMillis())
+                    .setAutoCancel(true)
+                    .build();
+            notificationManager.notify(1, notification);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

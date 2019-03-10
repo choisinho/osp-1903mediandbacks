@@ -87,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 UserService.userId = id;
                 UserService.dataTotal += 1;
+                UserService.buzzable = true;
                 UserService.userKey = String.valueOf(id.hashCode());
                 startService(new Intent(this, UserService.class));
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));

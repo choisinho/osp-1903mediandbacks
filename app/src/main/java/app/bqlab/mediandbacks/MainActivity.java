@@ -278,7 +278,8 @@ public class MainActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setText("BAD");
                 ((TextView) findViewById(R.id.main_dashboard_chart_state)).setText(text);
             }
-            String vibrateText = String.valueOf(UserService.dataBad) + "회";
+            String vibrateText = String.valueOf(UserService.dataVibrate) + "회";
+            ((TextView) findViewById(R.id.main_dashboard_vibrate_content)).setText(vibrateText);
             ((TextView) findViewById(R.id.main_dashboard_vibrate_content)).setText(vibrateText);
         } else {
             ArrayList<PieEntry> values = new ArrayList<>();
@@ -302,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorWhiteDark));
             findViewById(R.id.main_dashboard_chart_state).setVisibility(View.GONE);
         }
-        if (UserService.dataBad > 3600)
+        if (UserService.dataGood > 3600)
             goodTimeText = String.valueOf(UserService.dataGood / 3600) + "시간 " + String.valueOf((UserService.dataGood % 3600) / 60) + "분";
         else
             goodTimeText = String.valueOf((UserService.dataGood % 3600) / 60) + "분";
@@ -314,12 +315,12 @@ public class MainActivity extends AppCompatActivity {
             totalTimeText = String.valueOf(UserService.dataTotal / 3600) + "시간 " + String.valueOf((UserService.dataTotal % 3600) / 60) + "분";
         else
             totalTimeText = String.valueOf((UserService.dataTotal % 3600) / 60) + "분";
+        String vibrateTimeText = String.valueOf(UserService.dataVibrate) + "회";
         ((TextView) findViewById(R.id.main_analysis_time_content)).setText(String.valueOf(totalTimeText));
-        ((TextView) findViewById(R.id.main_analysis_vibrate_content)).setText("");
+        ((TextView) findViewById(R.id.main_analysis_vibrate_content)).setText(vibrateTimeText);
         ((TextView) findViewById(R.id.main_analysis_good_content)).setText(goodTimeText);
         ((TextView) findViewById(R.id.main_analysis_bad_content)).setText(badTimeText);
         ((TextView) findViewById(R.id.main_dashboard_total_content)).setText(totalTimeText);
-        ((TextView) findViewById(R.id.main_analysis_vibrate_content)).setText(badTimeText);
     }
 
     private void setMainAnalisys() {
