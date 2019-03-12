@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //setup layout
-        if (UserService.dataTotal != 0) {
+        if (UserService.dataTotal != 0 && (UserService.dataBad != 0 || UserService.dataGood != 0)) {
             ArrayList<PieEntry> values = new ArrayList<>();
             mainChart.setUsePercentValues(true);
             mainChart.getDescription().setEnabled(false);
