@@ -92,7 +92,7 @@ class Bluetooth implements Serializable {
 
     boolean isPaired() {
         for (BluetoothDevice device : pairedDevices) {
-            if (device.getName().equals("mediandbacks")) {
+            if (device.getName().equals("HC-06")) {
                 return true;
             }
         }
@@ -105,7 +105,7 @@ class Bluetooth implements Serializable {
 
     BluetoothDevice getPairedDevice() {
         for (BluetoothDevice device : pairedDevices) {
-            if (device.getName().equals("mediandbacks")) {
+            if (device.getName().equals("HC-06")) {
                 return device;
             }
         }
@@ -122,7 +122,7 @@ class Bluetooth implements Serializable {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (device.getName().equals("mediandbacks")) {
+                if (device.getName().equals("HC-06")) {
                     mBTDevice = device;
                     mBTAdapter.cancelDiscovery();
                     mBluetooth.connect(device.getAddress());
