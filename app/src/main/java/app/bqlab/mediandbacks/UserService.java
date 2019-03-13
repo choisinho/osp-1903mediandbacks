@@ -73,21 +73,25 @@ public class UserService extends Service implements Runnable {
     }
 
     public void loadData(DataSnapshot dataSnapshot) {
-        //data
-        dataGood = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("good").getValue())).intValue();
-        dataBad = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("bad").getValue())).intValue();
-        dataTotal = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("total").getValue())).intValue();
-        dataVibrate = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("vibrate").getValue())).intValue();
-        //info
-        userName = Objects.requireNonNull(dataSnapshot.child("info").child("name").getValue()).toString();
-        userSex = Objects.requireNonNull(dataSnapshot.child("info").child("sex").getValue()).toString();
-        userBirthday = Objects.requireNonNull(dataSnapshot.child("info").child("birthday").getValue()).toString();
-        userRegisterDate = Objects.requireNonNull(dataSnapshot.child("info").child("register_date").getValue()).toString();
-        //setting
-        notifyDelay = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("notify_delay").getValue())).intValue();
-        weekGoal = Objects.requireNonNull(dataSnapshot.child("setting").child("week_goal").getValue()).toString();
-        goodPose = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("good_pose").getValue())).intValue();
-        badPose = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("bad_pose").getValue())).intValue();
+        try {
+            //data
+            dataGood = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("good").getValue())).intValue();
+            dataBad = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("bad").getValue())).intValue();
+            dataTotal = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("total").getValue())).intValue();
+            dataVibrate = ((Long) Objects.requireNonNull(dataSnapshot.child("data").child(today).child("vibrate").getValue())).intValue();
+            //info
+            userName = Objects.requireNonNull(dataSnapshot.child("info").child("name").getValue()).toString();
+            userSex = Objects.requireNonNull(dataSnapshot.child("info").child("sex").getValue()).toString();
+            userBirthday = Objects.requireNonNull(dataSnapshot.child("info").child("birthday").getValue()).toString();
+            userRegisterDate = Objects.requireNonNull(dataSnapshot.child("info").child("register_date").getValue()).toString();
+            //setting
+            notifyDelay = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("notify_delay").getValue())).intValue();
+            weekGoal = Objects.requireNonNull(dataSnapshot.child("setting").child("week_goal").getValue()).toString();
+            goodPose = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("good_pose").getValue())).intValue();
+            badPose = ((Long) Objects.requireNonNull(dataSnapshot.child("setting").child("bad_pose").getValue())).intValue();
+        } catch (NullPointerException e) {
+            checkToday(dataSnapshot.child("data").getChildren());
+        }
     }
 
     public void processData(int data) {
@@ -123,7 +127,6 @@ public class UserService extends Service implements Runnable {
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                checkToday(dataSnapshot.child("data").getChildren());
                 loadData(dataSnapshot);
             }
 
