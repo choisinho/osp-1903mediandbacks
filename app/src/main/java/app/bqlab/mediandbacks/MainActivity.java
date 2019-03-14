@@ -628,8 +628,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void connectDevice() {
         if (UserService.deviceConnected) {
-            Log.d("MainActivity", "Already device connected");
-            Toast.makeText(this, "이미 장치와 연결되어 있습니다.", Toast.LENGTH_LONG).show();
+            Log.d("MainActivity", "Already connected");
         } else {
             Log.d("MainActivity", "Start to connect device");
             final ProgressLayout p = new ProgressLayout(this);
@@ -639,6 +638,8 @@ public class MainActivity extends AppCompatActivity {
             mBluetooth.getSetting().setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
                 @Override
                 public void onDataReceived(byte[] data, String message) {
+                    if (UserService.dataTotal == 0)
+                        UserService.dataTotal = 1;
                     UserService.deviceConnected = true;
                     UserService.data = Integer.valueOf(message) - 90;
                     mDatabase.child(UserService.userKey).child("data").child("realtime").setValue(UserService.data);
@@ -648,7 +649,6 @@ public class MainActivity extends AppCompatActivity {
             mBluetooth.getSetting().setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
                 @Override
                 public void onDeviceConnected(String name, String address) {
-//                    UserService.dataTotal = 1;
                     main.removeView(p);
                     ChildrenEnable.set(true, main);
                     ChildrenEnable.set(true, mainBar);

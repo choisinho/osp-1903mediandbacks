@@ -18,7 +18,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-class Bluetooth implements Serializable {
+class Bluetooth {
     //constants
     static final int REQUEST_ENABLE_BLUETOOTH = 1000;
     static final int REQUEST_DISCOVERABLE = 1001;
@@ -33,13 +33,17 @@ class Bluetooth implements Serializable {
     private List<BluetoothDevice> connectedDevices;
 
     Bluetooth(Activity activity, Context context) {
-        mContext = context;
-        mActivity = activity;
-        mBluetooth = new BluetoothSPP(context);
-        mBTAdapter = BluetoothAdapter.getDefaultAdapter();
-        mBTManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
-        pairedDevices = mBTAdapter.getBondedDevices();
-        connectedDevices = mBTManager.getConnectedDevices(BluetoothGatt.GATT);
+        try {
+            mContext = context;
+            mActivity = activity;
+            mBluetooth = new BluetoothSPP(context);
+            mBTAdapter = BluetoothAdapter.getDefaultAdapter();
+            mBTManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+            pairedDevices = mBTAdapter.getBondedDevices();
+            connectedDevices = mBTManager.getConnectedDevices(BluetoothGatt.GATT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     void checkup() {
@@ -92,7 +96,7 @@ class Bluetooth implements Serializable {
 
     boolean isPaired() {
         for (BluetoothDevice device : pairedDevices) {
-            if (device.getName().equals("HC-06")) {
+            if (device.getName().equals("mediandbacks")) {
                 return true;
             }
         }
@@ -105,7 +109,7 @@ class Bluetooth implements Serializable {
 
     BluetoothDevice getPairedDevice() {
         for (BluetoothDevice device : pairedDevices) {
-            if (device.getName().equals("HC-06")) {
+            if (device.getName().equals("mediandbacks")) {
                 return device;
             }
         }
@@ -122,7 +126,7 @@ class Bluetooth implements Serializable {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (device.getName().equals("HC-06")) {
+                if (device.getName().equals("mediandbacks")) {
                     mBTDevice = device;
                     mBTAdapter.cancelDiscovery();
                     mBluetooth.connect(device.getAddress());

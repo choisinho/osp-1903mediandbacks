@@ -282,7 +282,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/app_button_white_img"
-            android:text="@string/login_login_done"
+            android:text="@string/register_done"
             android:textColor="@color/colorBlack"
             android:textSize="18sp"
             android:textStyle="bold" />

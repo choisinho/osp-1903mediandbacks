@@ -41,7 +41,7 @@
     <string name="initial_second_title">메디앤백스 연결하기</string>
     <string name="initial_second_text">메디앤백스를 찾았습니다.</string>
     <string name="initial_second_text2">앱과 메디앤백스를 연결하기 위해\n메디앤백스의 전원버튼을\n더블 클릭해 주세요.</string>
-    <string name="initial_second_button">메디앤박스를 검색중 입니다.</string>
+    <string name="initial_second_button">메디앤백스를 검색중 입니다.</string>
     <string name="initial_second_button2">연결중 입니다.</string>
     <string name="initial_second_button3">기기 설정하기</string>
     <string name="initial_third_title">바른 자세 설정하기</string>

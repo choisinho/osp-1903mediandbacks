@@ -138,58 +138,67 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_fifth).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.initial_actionbar)).setText(getResources().getString(R.string.initial_second_title));
         //event
-        mBluetooth.getSetting().setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
-            @Override
-            public void onDataReceived(byte[] data, String message) {
-                UserService.deviceConnected = true;
-                UserService.data = Integer.valueOf(message) - 90;
-                mDatabase.child(UserService.userKey).child("data").child("realtime").setValue(UserService.data);
-                Log.d("InitialiActivity", "Realtime data: " + String.valueOf(UserService.data));
-            }
-        });
-        mBluetooth.getSetting().setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
-            @Override
-            public void onDeviceConnected(String name, String address) {
+        if (UserService.deviceConnected) {
+            if (UserService.dataTotal == 0)
                 UserService.dataTotal = 1;
-                Log.d("InitialActivity", "Connected to device");
-                ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button3));
-                findViewById(R.id.initial_second_button).setBackground(getResources().getDrawable(R.drawable.app_button_red));
-            }
-
-            @Override
-            public void onDeviceDisconnected() {
-                UserService.deviceConnected = false;
-                mBluetooth.getSetting().disconnect();
-                mBluetooth.getSetting().cancelDiscovery();
-                Log.d("MainActivity", "Disconnected to device");
-                Toast.makeText(InitialActivity.this, "장치와의 연결이 끊겼습니다.", Toast.LENGTH_LONG).show();
-                ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button));
-                findViewById(R.id.initial_second_button).setBackground(getResources().getDrawable(R.drawable.app_button_gray));
-                showInitialFirst();
-            }
-
-            @Override
-            public void onDeviceConnectionFailed() {
-                UserService.deviceConnected = false;
-                mBluetooth.getSetting().disconnect();
-                mBluetooth.getSetting().cancelDiscovery();
-                Log.d("InitialActivity", "Failed to connect device");
-                Toast.makeText(InitialActivity.this, "장치와 연결할 수 없습니다.", Toast.LENGTH_LONG).show();
-                ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button));
-                findViewById(R.id.initial_second_button).setBackground(getResources().getDrawable(R.drawable.app_button_gray));
-                showInitialFirst();
-            }
-        });
-        findViewById(R.id.initial_second_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (UserService.deviceConnected) {
-                    showSetposeLayout();
+            Log.d("InitialActivity", "Already Connected");
+            ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button3));
+            findViewById(R.id.initial_second_button).setBackground(getResources().getDrawable(R.drawable.app_button_red));
+        } else {
+            mBluetooth.getSetting().setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
+                @Override
+                public void onDataReceived(byte[] data, String message) {
+                    UserService.deviceConnected = true;
+                    UserService.data = Integer.valueOf(message) - 90;
+                    mDatabase.child(UserService.userKey).child("data").child("realtime").setValue(UserService.data);
+                    Log.d("InitialiActivity", "Realtime data: " + String.valueOf(UserService.data));
                 }
-            }
-        });
-        //call method
-        mBluetooth.checkup();
+            });
+            mBluetooth.getSetting().setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
+                @Override
+                public void onDeviceConnected(String name, String address) {
+                    if (UserService.dataTotal == 0)
+                        UserService.dataTotal = 1;
+                    Log.d("InitialActivity", "Connected to device");
+                    ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button3));
+                    findViewById(R.id.initial_second_button).setBackground(getResources().getDrawable(R.drawable.app_button_red));
+                }
+
+                @Override
+                public void onDeviceDisconnected() {
+                    UserService.deviceConnected = false;
+                    mBluetooth.getSetting().disconnect();
+                    mBluetooth.getSetting().cancelDiscovery();
+                    Log.d("MainActivity", "Disconnected to device");
+                    Toast.makeText(InitialActivity.this, "장치와의 연결이 끊겼습니다.", Toast.LENGTH_LONG).show();
+                    ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button));
+                    findViewById(R.id.initial_second_button).setBackground(getResources().getDrawable(R.drawable.app_button_gray));
+                    showInitialFirst();
+                }
+
+                @Override
+                public void onDeviceConnectionFailed() {
+                    UserService.deviceConnected = false;
+                    mBluetooth.getSetting().disconnect();
+                    mBluetooth.getSetting().cancelDiscovery();
+                    Log.d("InitialActivity", "Failed to connect device");
+                    Toast.makeText(InitialActivity.this, "장치와 연결할 수 없습니다.", Toast.LENGTH_LONG).show();
+                    ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button));
+                    findViewById(R.id.initial_second_button).setBackground(getResources().getDrawable(R.drawable.app_button_gray));
+                    showInitialFirst();
+                }
+            });
+            findViewById(R.id.initial_second_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (UserService.deviceConnected) {
+                        showSetposeLayout();
+                    }
+                }
+            });
+            //call method
+            mBluetooth.checkup();
+        }
     }
 
     private void showInitialThird() {

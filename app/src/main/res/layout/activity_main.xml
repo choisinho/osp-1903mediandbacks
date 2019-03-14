@@ -36,8 +36,8 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="170dp"
-                        android:layout_height="36dp"
+                        android:layout_width="160dp"
+                        android:layout_height="30dp"
                         android:layout_marginTop="20dp"
                         android:background="@drawable/app_wordmark" />
 
@@ -49,12 +49,12 @@
                         android:text="@string/main_dashboard_title"
                         android:textAllCaps="false"
                         android:textColor="@color/colorBlack"
-                        android:textSize="24sp"
+                        android:textSize="22sp"
                         android:textStyle="bold" />
 
                     <RelativeLayout
-                        android:layout_width="220dp"
-                        android:layout_height="220dp"
+                        android:layout_width="180dp"
+                        android:layout_height="180dp"
                         android:layout_marginTop="10dp"
                         android:gravity="center">
 
@@ -259,7 +259,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -307,6 +307,32 @@
                         android:textColor="@color/colorWhite"
                         android:textSize="18sp"
                         android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="정상"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="48sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="정상입니다.\n그래도 꾸준히 관리하세요."
+                            android:textAlignment="center"
+                            android:layout_marginBottom="40dp"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
                 </RelativeLayout>
 
                 <LinearLayout

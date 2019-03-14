@@ -31,7 +31,7 @@ public class StartActivity extends AppCompatActivity {
         findViewById(R.id.start_login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(StartActivity.this, LoginActivity.class));
+                startActivity(new Intent(StartActivity.this, MainActivity.class));
             }
         });
     }
