@@ -648,7 +648,7 @@ public class MainActivity extends AppCompatActivity {
             mBluetooth.getSetting().setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
                 @Override
                 public void onDeviceConnected(String name, String address) {
-                    UserService.dataTotal = 1;
+//                    UserService.dataTotal = 1;
                     main.removeView(p);
                     ChildrenEnable.set(true, main);
                     ChildrenEnable.set(true, mainBar);
