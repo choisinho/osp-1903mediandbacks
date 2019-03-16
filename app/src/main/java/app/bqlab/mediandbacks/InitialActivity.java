@@ -88,6 +88,26 @@ public class InitialActivity extends AppCompatActivity {
     }
 
     private void showInitialFirst() {
+        //check userservice running
+        if (!ServiceCheck.isRunning(this, UserService.class.getName())) {
+            Log.d("MainActivity", "Userservice not running");
+            new android.app.AlertDialog.Builder(this)
+                    .setMessage("사용자의 정보를 불러올 수 없습니다. 다시 로그인하시길 바랍니다.")
+                    .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(InitialActivity.this, LoginActivity.class));
+                            mBluetooth.getSetting().disconnect();
+                            finish();
+                        }
+                    }).show();
+        }
         //attribute
         findViewById(R.id.initial_first).setVisibility(View.VISIBLE);
         findViewById(R.id.initial_second).setVisibility(View.GONE);

@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
             mainChart.setHoleRadius(90f);
             mainChart.setHoleColor(getResources().getColor(R.color.colorWhite));
             mainChart.getLegend().setEnabled(false);
-            values.add(new PieEntry(1f, "no data"));
+            values.add(new PieEntry(1f, "No data"));
             PieDataSet dataSet = new PieDataSet(values, "Data");
             dataSet.setSliceSpace(0f);
             dataSet.setColors(getResources().getColor(R.color.colorWhiteDark));
