@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                            mBluetooth.getSetting().disconnect();
                             finish();
                         }
                     }).show();
