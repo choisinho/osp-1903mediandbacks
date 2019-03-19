@@ -84,37 +84,21 @@ public class LoginActivity extends AppCompatActivity {
                 UserService.userId = id;
                 UserService.buzzable = false;
                 UserService.userKey = String.valueOf(id.hashCode());
-                try {
-                    if(!loginClicked) {
-                        loginClicked = true;
-                        startService(new Intent(this, UserService.class));
-                        Thread.sleep(5000);
-                        Toast.makeText(this, "로그인중입니다. 잠시만 기다려 주세요.", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(this, InitialActivity.class));
-                        finish();
-                    } else {
-                        Toast.makeText(this, "로그인중입니다. 잠시만 기다려 주세요.", Toast.LENGTH_LONG).show();
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if(!loginClicked) {
+                    loginClicked = true;
+                    startService(new Intent(this, UserService.class));
+                    startActivity(new Intent(this, InitialActivity.class));
+                    finish();
                 }
             } else {
                 UserService.userId = id;
                 UserService.buzzable = true;
                 UserService.userKey = String.valueOf(id.hashCode());
-                try {
-                    if (!loginClicked) {
-                        loginClicked = true;
-                        startService(new Intent(this, UserService.class));
-                        Thread.sleep(5000);
-                        Toast.makeText(this, "로그인중입니다. 잠시만 기다려 주세요.", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        finish();
-                    } else {
-                        Toast.makeText(this, "로그인중입니다. 잠시만 기다려 주세요.", Toast.LENGTH_LONG).show();
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if (!loginClicked) {
+                    loginClicked = true;
+                    startService(new Intent(this, UserService.class));
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
                 }
             }
         }

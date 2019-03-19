@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 public class StartActivity extends AppCompatActivity {
@@ -31,7 +32,7 @@ public class StartActivity extends AppCompatActivity {
         findViewById(R.id.start_login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(StartActivity.this, MainActivity.class));
+                startActivity(new Intent(StartActivity.this, LoginActivity.class));
             }
         });
     }
