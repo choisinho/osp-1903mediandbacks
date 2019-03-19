@@ -23,6 +23,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity {
+    //variables
+    boolean loginClicked;
+    //objects
     DatabaseReference mDatabase;
     ArrayList<DataSnapshot> infoList;
 
@@ -81,17 +84,38 @@ public class LoginActivity extends AppCompatActivity {
                 UserService.userId = id;
                 UserService.buzzable = false;
                 UserService.userKey = String.valueOf(id.hashCode());
-                startService(new Intent(this, UserService.class));
-                startActivity(new Intent(this, InitialActivity.class));
-                finish();
+                try {
+                    if(!loginClicked) {
+                        loginClicked = true;
+                        startService(new Intent(this, UserService.class));
+                        Thread.sleep(5000);
+                        Toast.makeText(this, "로그인중입니다. 잠시만 기다려 주세요.", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(this, InitialActivity.class));
+                        finish();
+                    } else {
+                        Toast.makeText(this, "로그인중입니다. 잠시만 기다려 주세요.", Toast.LENGTH_LONG).show();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             } else {
                 UserService.userId = id;
-                UserService.dataTotal += 1;
                 UserService.buzzable = true;
                 UserService.userKey = String.valueOf(id.hashCode());
-                startService(new Intent(this, UserService.class));
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                finish();
+                try {
+                    if (!loginClicked) {
+                        loginClicked = true;
+                        startService(new Intent(this, UserService.class));
+                        Thread.sleep(5000);
+                        Toast.makeText(this, "로그인중입니다. 잠시만 기다려 주세요.", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                    } else {
+                        Toast.makeText(this, "로그인중입니다. 잠시만 기다려 주세요.", Toast.LENGTH_LONG).show();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -108,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
         if (userInfo == null)
             return false;
         else
-            return String.valueOf(userInfo.child("pw").getValue()).equals(pw);
+            return String.valueOf(userInfo.child("pw").getValue()).hashCode() == pw.hashCode();
     }
 
     private void setupDatabase() {

@@ -18,7 +18,7 @@ public class IntroActivity extends AppCompatActivity {
     private void checkUserService() {
         if (ServiceCheck.isRunning(this, UserService.class.getName())) {
             if (getSharedPreferences("setting", MODE_PRIVATE).getBoolean("FIRST_RUN", true)) {
-                startActivity(new Intent(this, MainActivity.class));
+                startActivity(new Intent(this, InitialActivity.class));
                 finish();
             } else {
                 startActivity(new Intent(this, MainActivity.class));

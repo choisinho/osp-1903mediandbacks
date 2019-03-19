@@ -114,7 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (isFormCorrect()) {
                     //info
                     mDatabase.child(userKey).child("info").child("id").setValue(userId);
-                    mDatabase.child(userKey).child("info").child("pw").setValue(userPw);
+                    mDatabase.child(userKey).child("info").child("pw").setValue(userPw.hashCode());
                     mDatabase.child(userKey).child("info").child("name").setValue(userName);
                     mDatabase.child(userKey).child("info").child("sex").setValue(userSex);
                     mDatabase.child(userKey).child("info").child("birthday").setValue(userBirthday);
