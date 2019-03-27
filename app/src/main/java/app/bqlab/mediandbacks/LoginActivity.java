@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
     //variables
@@ -116,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
         if (userInfo == null)
             return false;
         else
-            return String.valueOf(userInfo.child("pw").getValue()).hashCode() == pw.hashCode();
+            return String.valueOf(userInfo.child("pw").getValue()).equals(String.valueOf(pw.hashCode()));
     }
 
     private void setupDatabase() {
