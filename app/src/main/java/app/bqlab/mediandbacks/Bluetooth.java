@@ -96,7 +96,7 @@ class Bluetooth {
 
     boolean isPaired() {
         for (BluetoothDevice device : pairedDevices) {
-            if (device.getName().equals("HC-06")) {
+            if (device.getName().equals("mediandbacks")) {
                 return true;
             }
         }
@@ -109,7 +109,7 @@ class Bluetooth {
 
     BluetoothDevice getPairedDevice() {
         for (BluetoothDevice device : pairedDevices) {
-            if (device.getName().equals("HC-06")) {
+            if (device.getName().equals("mediandbacks")) {
                 return device;
             }
         }
@@ -126,7 +126,7 @@ class Bluetooth {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (device.getName().equals("HC-06")) {
+                if (device.getName().equals("mediandbacks")) {
                     mBTDevice = device;
                     mBTAdapter.cancelDiscovery();
                     mBluetooth.connect(device.getAddress());
