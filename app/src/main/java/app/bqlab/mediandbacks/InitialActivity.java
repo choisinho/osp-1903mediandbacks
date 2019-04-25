@@ -90,7 +90,6 @@ public class InitialActivity extends AppCompatActivity {
     private void showInitialFirst() {
         //check userservice running
         if (!ServiceCheck.isRunning(this, UserService.class.getName())) {
-            Log.d("MainActivity", "Userservice not running");
             new android.app.AlertDialog.Builder(this)
                     .setMessage("사용자의 정보를 불러올 수 없습니다. 다시 로그인하시길 바랍니다.")
                     .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
@@ -161,7 +160,6 @@ public class InitialActivity extends AppCompatActivity {
         if (UserService.deviceConnected) {
             if (UserService.dataTotal == 0)
                 UserService.dataTotal = 1;
-            Log.d("InitialActivity", "Already Connected");
             ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button3));
             findViewById(R.id.initial_second_button).setBackground(getResources().getDrawable(R.drawable.app_button_red));
         } else {
@@ -171,7 +169,6 @@ public class InitialActivity extends AppCompatActivity {
                     UserService.deviceConnected = true;
                     UserService.data = Integer.valueOf(message) - 90;
                     mDatabase.child(UserService.userKey).child("data").child("realtime").setValue(UserService.data);
-                    Log.d("InitialiActivity", "Realtime data: " + String.valueOf(UserService.data));
                 }
             });
             mBluetooth.getSetting().setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
@@ -179,7 +176,6 @@ public class InitialActivity extends AppCompatActivity {
                 public void onDeviceConnected(String name, String address) {
                     if (UserService.dataTotal == 0)
                         UserService.dataTotal = 1;
-                    Log.d("InitialActivity", "Connected to device");
                     ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button3));
                     findViewById(R.id.initial_second_button).setBackground(getResources().getDrawable(R.drawable.app_button_red));
                 }
@@ -189,7 +185,6 @@ public class InitialActivity extends AppCompatActivity {
                     UserService.deviceConnected = false;
                     mBluetooth.getSetting().disconnect();
                     mBluetooth.getSetting().cancelDiscovery();
-                    Log.d("MainActivity", "Disconnected to device");
                     Toast.makeText(InitialActivity.this, "장치와의 연결이 끊겼습니다.", Toast.LENGTH_LONG).show();
                     ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button));
                     findViewById(R.id.initial_second_button).setBackground(getResources().getDrawable(R.drawable.app_button_gray));
@@ -201,7 +196,6 @@ public class InitialActivity extends AppCompatActivity {
                     UserService.deviceConnected = false;
                     mBluetooth.getSetting().disconnect();
                     mBluetooth.getSetting().cancelDiscovery();
-                    Log.d("InitialActivity", "Failed to connect device");
                     Toast.makeText(InitialActivity.this, "장치와 연결할 수 없습니다.", Toast.LENGTH_LONG).show();
                     ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button));
                     findViewById(R.id.initial_second_button).setBackground(getResources().getDrawable(R.drawable.app_button_gray));
@@ -233,7 +227,6 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_third_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("InitialActivity", "Good pose set to " + String.valueOf(UserService.data));
                 mDatabase.child(UserService.userKey).child("setting").child("good_pose").setValue(UserService.data);
                 showInitialFourth();
             }
@@ -252,7 +245,6 @@ public class InitialActivity extends AppCompatActivity {
         findViewById(R.id.initial_fourth_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("InitialActivity", "Bad pose set to " + String.valueOf(UserService.data));
                 mDatabase.child(UserService.userKey).child("setting").child("bad_pose").setValue(UserService.data);
                 showInitialFifth();
             }
@@ -291,7 +283,6 @@ public class InitialActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 //set notify delay
                                 int i = picker.getValue() * 5;
-                                Log.d("InitialActivity", "Notify delay set to " + String.valueOf(i));
                                 mDatabase.child(UserService.userKey).child("setting").child("notify_delay").setValue(i);
                                 //load week goal setting
                                 ((TextView) findViewById(R.id.initial_actionbar)).setText("주간목표 설정하기");
