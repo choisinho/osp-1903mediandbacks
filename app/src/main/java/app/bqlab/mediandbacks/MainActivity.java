@@ -267,19 +267,19 @@ public class MainActivity extends AppCompatActivity {
             PieData pieData = new PieData(dataSet);
             pieData.setValueTextSize(0f);
             mainChart.setData(pieData);
-            String text = "나쁜 자세 " + (int) ((double) UserService.dataBad / (double) UserService.dataTotal * 100) + "%";
+            String text = "나쁜 자세 " + String.valueOf((int) ((double) UserService.dataBad / (double) UserService.dataTotal * 100)) + "%";
             if (UserService.dataBad < UserService.dataGood) {
                 ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorBlueForChart));
-                findViewById(R.id.main_dashboard_chart_state).setVisibility(View.VISIBLE);
+                ((TextView) findViewById(R.id.main_dashboard_chart_state)).setVisibility(View.VISIBLE);
                 ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setText("GOOD");
                 ((TextView) findViewById(R.id.main_dashboard_chart_state)).setText(text);
             } else {
                 ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setTextColor(getResources().getColor(R.color.colorRedForChart));
-                findViewById(R.id.main_dashboard_chart_state).setVisibility(View.VISIBLE);
+                ((TextView) findViewById(R.id.main_dashboard_chart_state)).setVisibility(View.VISIBLE);
                 ((TextView) findViewById(R.id.main_dashboard_chart_grade)).setText("BAD");
                 ((TextView) findViewById(R.id.main_dashboard_chart_state)).setText(text);
             }
-            String vibrateText = UserService.dataVibrate + "회";
+            String vibrateText = String.valueOf(UserService.dataVibrate) + "회";
             ((TextView) findViewById(R.id.main_dashboard_vibrate_content)).setText(vibrateText);
             ((TextView) findViewById(R.id.main_dashboard_vibrate_content)).setText(vibrateText);
         } else {
@@ -305,18 +305,18 @@ public class MainActivity extends AppCompatActivity {
             findViewById(R.id.main_dashboard_chart_state).setVisibility(View.GONE);
         }
         if (UserService.dataGood > 3600)
-            goodTimeText = UserService.dataGood / 3600 + "시간 " + (UserService.dataGood % 3600) / 60 + "분";
+            goodTimeText = String.valueOf(UserService.dataGood / 3600) + "시간 " + String.valueOf((UserService.dataGood % 3600) / 60) + "분";
         else
-            goodTimeText = (UserService.dataGood % 3600) / 60 + "분";
+            goodTimeText = String.valueOf((UserService.dataGood % 3600) / 60) + "분";
         if (UserService.dataBad > 3600)
-            badTimeText = UserService.dataBad / 3600 + "시간 " + (UserService.dataBad % 3600) / 60 + "분";
+            badTimeText = String.valueOf(UserService.dataBad / 3600) + "시간 " + String.valueOf((UserService.dataBad % 3600) / 60) + "분";
         else
-            badTimeText = (UserService.dataBad % 3600) / 60 + "분";
+            badTimeText = String.valueOf((UserService.dataBad % 3600) / 60) + "분";
         if (UserService.dataTotal > 3600)
-            totalTimeText = UserService.dataTotal / 3600 + "시간 " + (UserService.dataTotal % 3600) / 60 + "분";
+            totalTimeText = String.valueOf(UserService.dataTotal / 3600) + "시간 " + String.valueOf((UserService.dataTotal % 3600) / 60) + "분";
         else
-            totalTimeText = (UserService.dataTotal % 3600) / 60 + "분";
-        String vibrateTimeText = UserService.dataVibrate + "회";
+            totalTimeText = String.valueOf((UserService.dataTotal % 3600) / 60) + "분";
+        String vibrateTimeText = String.valueOf(UserService.dataVibrate) + "회";
         ((TextView) findViewById(R.id.main_analysis_time_content)).setText(String.valueOf(totalTimeText));
         ((TextView) findViewById(R.id.main_analysis_vibrate_content)).setText(vibrateTimeText);
         ((TextView) findViewById(R.id.main_analysis_good_content)).setText(goodTimeText);
@@ -450,8 +450,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        String goodpose = UserService.goodPose + "도";
-        String badpose = UserService.badPose + "도";
+        String goodpose = String.valueOf(UserService.goodPose) + "도";
+        String badpose = String.valueOf(UserService.badPose) + "도";
         ((TextView) findViewById(R.id.main_setting_notify_notify_good)).setText(goodpose);
         ((TextView) findViewById(R.id.main_setting_notify_notify_bad)).setText(badpose);
     }
@@ -653,7 +653,7 @@ public class MainActivity extends AppCompatActivity {
                     UserService.deviceConnected = true;
                     UserService.data = Integer.valueOf(message) - 90;
                     mDatabase.child(UserService.userKey).child("data").child("realtime").setValue(UserService.data);
-                    Log.d("MainActivity", "Realtime data: " + UserService.data);
+                    Log.d("MainActivity", "Realtime data: " + String.valueOf(UserService.data));
                 }
             });
             mBluetooth.getSetting().setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {

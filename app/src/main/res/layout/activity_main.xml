@@ -328,9 +328,9 @@
                             android:id="@+id/main_analysis_top_details"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="40dp"
                             android:text="정상입니다.\n그래도 꾸준히 관리하세요."
                             android:textAlignment="center"
-                            android:layout_marginBottom="40dp"
                             android:textColor="@color/colorWhite"
                             android:textSize="18sp"
                             android:textStyle="bold" />
