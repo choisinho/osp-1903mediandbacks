@@ -351,7 +351,10 @@ public class InitialActivity extends AppCompatActivity {
     private void checkEnterOption() {
         if (mainToInitial)
             showInitialThird();
-        else
+        else {
             showInitialFirst();
+            if (UserService.dataTotal == 0)
+                UserService.dataTotal = 1;
+        }
     }
 }

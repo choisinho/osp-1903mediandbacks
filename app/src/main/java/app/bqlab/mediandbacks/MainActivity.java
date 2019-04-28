@@ -378,9 +378,12 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.main_setting_set_posture).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, InitialActivity.class);
-                i.putExtra("mainToInitial", true);
-                startActivity(i);
+                if (UserService.deviceConnected) {
+                    Intent i = new Intent(MainActivity.this, InitialActivity.class);
+                    i.putExtra("mainToInitial", true);
+                    startActivity(i);
+                } else
+                    Toast.makeText(MainActivity.this, "장치와 연결되어 있지 않습니다.", Toast.LENGTH_LONG).show();
             }
         });
         findViewById(R.id.main_setting_my_profile).setOnClickListener(new View.OnClickListener() {

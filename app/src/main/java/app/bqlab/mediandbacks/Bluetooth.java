@@ -96,7 +96,7 @@ class Bluetooth {
 
     boolean isPaired() {
         for (BluetoothDevice device : pairedDevices) {
-            if (device.getName().equals("HC-06")) {
+            if (device.getName().equals("mediandbacks")) {
                 return true;
             }
         }
@@ -109,7 +109,7 @@ class Bluetooth {
 
     BluetoothDevice getPairedDevice() {
         for (BluetoothDevice device : pairedDevices) {
-            if (device.getName().equals("HC-06")) {
+            if (device.getName().equals("mediandbacks")) {
                 return device;
             }
         }
@@ -126,12 +126,14 @@ class Bluetooth {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                if (device.getName().equals("HC-06")) {
-                    mBTDevice = device;
-                    mBTAdapter.cancelDiscovery();
-                    mBluetooth.connect(device.getAddress());
-                    mActivity.unregisterReceiver(broadcastReceiver);
-                    Log.d("Bluetooth", "Found the device");
+                if (device.getName() != null) {
+                    if (device.getName().equals("mediandbacks")) {
+                        mBTDevice = device;
+                        mBTAdapter.cancelDiscovery();
+                        mBluetooth.connect(device.getAddress());
+                        mActivity.unregisterReceiver(broadcastReceiver);
+                        Log.d("Bluetooth", "Found the device");
+                    }
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 Log.d("Bluetooth", "Cannot found the device");
