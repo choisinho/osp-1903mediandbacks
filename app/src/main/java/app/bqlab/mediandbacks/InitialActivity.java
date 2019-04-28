@@ -179,6 +179,7 @@ public class InitialActivity extends AppCompatActivity {
                 public void onDeviceConnected(String name, String address) {
                     if (UserService.dataTotal == 0)
                         UserService.dataTotal = 1;
+                    UserService.deviceConnected = true;
                     Log.d("InitialActivity", "Connected to device");
                     ((Button) findViewById(R.id.initial_second_button)).setText(getResources().getString(R.string.initial_second_button3));
                     findViewById(R.id.initial_second_button).setBackground(getResources().getDrawable(R.drawable.app_button_red));

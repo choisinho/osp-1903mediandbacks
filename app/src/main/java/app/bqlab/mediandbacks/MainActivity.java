@@ -662,8 +662,6 @@ public class MainActivity extends AppCompatActivity {
             mBluetooth.getSetting().setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
                 @Override
                 public void onDataReceived(byte[] data, String message) {
-                    if (UserService.dataTotal == 0)
-                        UserService.dataTotal = 1;
                     UserService.deviceConnected = true;
                     UserService.data = Integer.valueOf(message) - 90;
                     mDatabase.child(UserService.userKey).child("data").child("realtime").setValue(UserService.data);
@@ -676,9 +674,12 @@ public class MainActivity extends AppCompatActivity {
                     main.removeView(p);
                     ChildrenEnable.set(true, main);
                     ChildrenEnable.set(true, mainBar);
-                    Log.d("MainActivity", "Connected to device");
+                    if (UserService.dataTotal == 0) {
+                        UserService.dataTotal = 1;
+                    }
                     UserService.deviceConnected = true;
                     Toast.makeText(MainActivity.this, "장치와 연결되었습니다. 장치를 착용한 후 움직여보세요.", Toast.LENGTH_LONG).show();
+                    Log.d("MainActivity", "Connected to device");
                     refresh();
                 }
 
