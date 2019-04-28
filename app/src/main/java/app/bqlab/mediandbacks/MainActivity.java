@@ -649,7 +649,9 @@ public class MainActivity extends AppCompatActivity {
         if (UserService.dataTotal == 0)
             UserService.dataTotal = 1;
         if (UserService.deviceConnected) {
+            refresh();
             Log.d("MainActivity", "Already connected");
+            Toast.makeText(this, "이미 장치와 연결되어 있습니다.", Toast.LENGTH_LONG).show();
         } else {
             Log.d("MainActivity", "Start to connect device");
             final ProgressLayout p = new ProgressLayout(this);
