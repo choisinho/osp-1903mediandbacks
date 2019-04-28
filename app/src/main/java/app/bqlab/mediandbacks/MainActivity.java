@@ -452,8 +452,8 @@ public class MainActivity extends AppCompatActivity {
                         .setAdapter(items, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ((TextView) findViewById(R.id.main_setting_notify_notify_time)).setText(new String[]{"즉시>", "5초>", "10초>"}[which]);
                                 mDatabase.child(UserService.userKey).child("setting").child("notify_delay").setValue(which * 5);
+                                refresh();
                             }
                         }).show();
 
@@ -463,6 +463,7 @@ public class MainActivity extends AppCompatActivity {
         String badpose = String.valueOf(UserService.badPose) + "도";
         ((TextView) findViewById(R.id.main_setting_notify_notify_good)).setText(goodpose);
         ((TextView) findViewById(R.id.main_setting_notify_notify_bad)).setText(badpose);
+        ((TextView) findViewById(R.id.main_setting_notify_notify_time)).setText(new String[]{"즉시>", "5초>", "10초>"}[UserService.notifyDelay/5]);
     }
 
     private void setMainSettingProfile() {
@@ -676,6 +677,8 @@ public class MainActivity extends AppCompatActivity {
                     ChildrenEnable.set(true, main);
                     ChildrenEnable.set(true, mainBar);
                     Log.d("MainActivity", "Connected to device");
+                    UserService.deviceConnected = true;
+                    Toast.makeText(MainActivity.this, "장치와 연결되었습니다. 장치를 착용한 후 움직여보세요.", Toast.LENGTH_LONG).show();
                     refresh();
                 }
 
