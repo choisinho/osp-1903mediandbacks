@@ -363,6 +363,12 @@ public class MainActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.main_setting_top_connect_state)).setText("연결 안됨");
             findViewById(R.id.main_setting_connect_top_circle).setBackground(getResources().getDrawable(R.drawable.app_white_circle));
         }
+        findViewById(R.id.main_setting_top_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLayoutByIndex(LAYOUT_MAIN_DASHBOARD);
+            }
+        });
         findViewById(R.id.main_setting_top_connect).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -640,6 +646,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void connectDevice() {
+        if (UserService.dataTotal == 0)
+            UserService.dataTotal = 1;
         if (UserService.deviceConnected) {
             Log.d("MainActivity", "Already connected");
         } else {

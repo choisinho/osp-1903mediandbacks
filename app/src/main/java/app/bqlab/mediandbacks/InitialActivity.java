@@ -353,8 +353,6 @@ public class InitialActivity extends AppCompatActivity {
             showInitialThird();
         else {
             showInitialFirst();
-            if (UserService.dataTotal == 0)
-                UserService.dataTotal = 1;
         }
     }
 }
