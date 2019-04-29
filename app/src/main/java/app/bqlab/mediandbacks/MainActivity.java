@@ -334,12 +334,12 @@ public class MainActivity extends AppCompatActivity {
         String today = UserService.today.substring(0, 4) + "-" + UserService.today.substring(4, 6) + "-" + UserService.today.substring(6, 8);
         String period = today + " ~ " + today;
         ((TextView) findViewById(R.id.main_analysis_top_date)).setText(period);
-        if (UserService.data > UserService.goodPose + 15) {
-            ((TextView) findViewById(R.id.main_analysis_top_state)).setText("전만");
-            ((TextView) findViewById(R.id.main_analysis_top_details)).setText("어깨를 좀 더\n펴 보세요.");
-        } else if (UserService.data < UserService.goodPose - 7) {
+        if (UserService.data > UserService.goodPose + 7) {
             ((TextView) findViewById(R.id.main_analysis_top_state)).setText("후만");
             ((TextView) findViewById(R.id.main_analysis_top_details)).setText("어깨를 좀 더\n숙여보세요.");
+        } else if (UserService.data < UserService.goodPose - 15) {
+            ((TextView) findViewById(R.id.main_analysis_top_state)).setText("전만");
+            ((TextView) findViewById(R.id.main_analysis_top_details)).setText("어깨를 좀 더\n펴 보세요.");
         } else {
             ((TextView) findViewById(R.id.main_analysis_top_state)).setText("정상");
             ((TextView) findViewById(R.id.main_analysis_top_details)).setText("정상입니다.\n꾸준히 관리하세요.");
